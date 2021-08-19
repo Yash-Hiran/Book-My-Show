@@ -49,8 +49,7 @@ class MovieApiTest() : BaseIntegrationSpec() {
                 |{
                 |  "id" : 1,
                 |  "title" : "Avengers",
-                |  "startTime" : "2021-06-01 09:15:00.000",
-                |  "endTime" : "2021-06-01 11:15:00.000"
+                |  "duration" : 120
                 |}
             """.trimMargin().trimIndent()
         }
@@ -66,8 +65,6 @@ class MovieApiTest() : BaseIntegrationSpec() {
     private fun newMovieRequest(startTime: Long, endTime: Long): MovieRequest {
         return MovieRequest(
             "Avengers",
-            startTime,
-            endTime
         )
     }
 }
