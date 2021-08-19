@@ -20,16 +20,14 @@ public class GetAllMoviesParamSetter : ParamSetter<GetAllMoviesParams> {
 public data class GetAllMoviesResult(
   public val id: Int,
   public val title: String,
-  public val startTime: Timestamp,
-  public val endTime: Timestamp
+  public val duration: Int
 )
 
 public class GetAllMoviesRowMapper : RowMapper<GetAllMoviesResult> {
   public override fun map(rs: ResultSet): GetAllMoviesResult = GetAllMoviesResult(
   id = rs.getObject("id") as kotlin.Int,
     title = rs.getObject("title") as kotlin.String,
-    startTime = rs.getObject("start_time") as java.sql.Timestamp,
-    endTime = rs.getObject("end_time") as java.sql.Timestamp)
+    duration = rs.getObject("duration") as kotlin.Int)
 }
 
 public class GetAllMoviesQuery : Query<GetAllMoviesParams, GetAllMoviesResult> {

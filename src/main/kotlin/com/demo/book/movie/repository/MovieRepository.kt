@@ -21,16 +21,14 @@ class MovieRepository(@Inject private val datasource: DataSource) {
             connection,
             SaveMovieParams(
                 movieToSave.title,
-                Timestamp.from(Instant.ofEpochMilli(movieToSave.startTime)),
-                Timestamp.from(Instant.ofEpochMilli(movieToSave.endTime))
+                movieToSave.duration
             )
         )
     }.map {
         Movie(
             it.id,
             it.title,
-            it.startTime.toLocalDateTime(),
-            it.endTime.toLocalDateTime()
+            it.duration
         )
     }.first()
 
@@ -43,8 +41,7 @@ class MovieRepository(@Inject private val datasource: DataSource) {
         Movie(
             it.id,
             it.title,
-            it.startTime.toLocalDateTime(),
-            it.endTime.toLocalDateTime()
+            it.duration
         )
     }
 }

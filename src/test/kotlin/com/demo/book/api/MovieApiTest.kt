@@ -34,8 +34,8 @@ class MovieApiTest() : BaseIntegrationSpec() {
             // Given
             val referenceDate = ZonedDateTime.of(2021, 6, 1, 9, 15, 0, 0, ZoneId.systemDefault())
             createNewMovie(newMovieRequest(
-                referenceDate.toInstant().toEpochMilli(),
-                referenceDate.plusHours(2).toInstant().toEpochMilli()
+                referenceDate.toInstant().toEpochMilli() / 60000,
+                referenceDate.plusHours(2).toInstant().toEpochMilli() / 60000
             ))
 
             // When
@@ -65,6 +65,7 @@ class MovieApiTest() : BaseIntegrationSpec() {
     private fun newMovieRequest(startTime: Long, endTime: Long): MovieRequest {
         return MovieRequest(
             "Avengers",
+            (endTime - startTime).toInt()
         )
     }
 }
