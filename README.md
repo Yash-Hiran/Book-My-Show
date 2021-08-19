@@ -16,15 +16,14 @@
 - Install postgres(optional), docker
 - Run the command : `docker compose up -d`
     - First time this takes time to download the docker image and get the postgresql up.
-- Navigate back to rood of project : `cd ..`
 - Build: `./gradlew clean build`
 - Build with lint: `./gradlew clean buildWithLint`
-- Apply norm changes: Run `./gradlew norm`
 - Run application: `./gradlew run`. App would run on `http://localhost:9000`
     - Test application using `http://localhost:9000/api/movies`
 - Run application in watch mode: `./gradlew run -t`
     - This will restart the server on code changes
-
+- Apply norm changes: Run `./gradlew norm`
+- 
 ## Micronaut 2.5.1 Documentation
 
 - [User Guide](https://docs.micronaut.io/2.5.1/guide/index.html)
