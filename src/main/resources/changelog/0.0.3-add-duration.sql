@@ -2,4 +2,4 @@ ALTER TABLE movies
 ADD COLUMN IF NOT EXISTS duration INTEGER NOT NULL DEFAULT 0;
 
 UPDATE movies
-SET duration=EXTRACT(EPOCH FROM (end_time - start_time))/60
+SET duration=EXTRACT(EPOCH FROM (end_time - start_time))/60;
