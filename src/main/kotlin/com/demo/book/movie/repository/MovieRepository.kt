@@ -1,14 +1,12 @@
 package com.demo.book.movie.repository
 
 import com.demo.book.movie.entity.Movie
-import com.demo.book.movie.request.MovieRequest
+import com.demo.book.movie.request.CreateMovieRequest
 import movie.GetAllMoviesParams
 import movie.GetAllMoviesQuery
 import movie.SaveMovieParams
 import movie.SaveMovieQuery
 import norm.query
-import java.sql.Timestamp
-import java.time.Instant
 import javax.inject.Inject
 import javax.inject.Singleton
 import javax.sql.DataSource
@@ -16,21 +14,19 @@ import javax.sql.DataSource
 @Singleton
 class MovieRepository(@Inject private val datasource: DataSource) {
 
-    fun save(movieToSave: MovieRequest): Movie = datasource.connection.use { connection ->
+    fun save(movieToSave: CreateMovieRequest): Movie = datasource.connection.use { connection ->
         SaveMovieQuery().query(
             connection,
             SaveMovieParams(
                 movieToSave.title,
-                Timestamp.from(Instant.ofEpochMilli(movieToSave.startTime)),
-                Timestamp.from(Instant.ofEpochMilli(movieToSave.endTime))
+                movieToSave.duration
             )
         )
     }.map {
         Movie(
             it.id,
             it.title,
-            it.startTime.toLocalDateTime(),
-            it.endTime.toLocalDateTime()
+            it.duration
         )
     }.first()
 
@@ -43,8 +39,7 @@ class MovieRepository(@Inject private val datasource: DataSource) {
         Movie(
             it.id,
             it.title,
-            it.startTime.toLocalDateTime(),
-            it.endTime.toLocalDateTime()
+            it.duration
         )
     }
 }
