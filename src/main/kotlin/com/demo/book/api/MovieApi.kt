@@ -4,6 +4,7 @@ import com.demo.book.movie.entity.Movie
 import com.demo.book.movie.service.MovieService
 import com.demo.book.movie.request.MovieRequest
 import io.micronaut.http.HttpResponse
+import io.micronaut.http.HttpStatus
 import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Controller
@@ -21,6 +22,9 @@ class MovieApi(@Inject val movieService: MovieService) {
 
     @Post("/movies")
     fun saveMovie(@Body movieRequest: MovieRequest): MutableHttpResponse<Int> {
-        return HttpResponse.ok(movieService.save(movieRequest).id)
+        // if movie duration is valid, add movie. Otherwise, return bad request
+        if (movieRequest.duration in 5..360)
+            return HttpResponse.ok(movieService.save(movieRequest).id)
+        return HttpResponse.badRequest()
     }
 }
