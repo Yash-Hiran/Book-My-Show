@@ -1,7 +1,7 @@
 package com.demo.book.movie.repository
 
 import com.demo.book.movie.entity.Movie
-import com.demo.book.movie.request.MovieRequest
+import com.demo.book.movie.request.CreateMovieRequest
 import movie.GetAllMoviesParams
 import movie.GetAllMoviesQuery
 import movie.SaveMovieParams
@@ -14,7 +14,7 @@ import javax.sql.DataSource
 @Singleton
 class MovieRepository(@Inject private val datasource: DataSource) {
 
-    fun save(movieToSave: MovieRequest): Movie = datasource.connection.use { connection ->
+    fun save(movieToSave: CreateMovieRequest): Movie = datasource.connection.use { connection ->
         SaveMovieQuery().query(
             connection,
             SaveMovieParams(

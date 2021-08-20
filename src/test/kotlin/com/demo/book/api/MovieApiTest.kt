@@ -2,7 +2,7 @@ package com.demo.book.api
 
 import com.demo.book.BaseIntegrationSpec
 import com.demo.book.movie.entity.Movie
-import com.demo.book.movie.request.MovieRequest
+import com.demo.book.movie.request.CreateMovieRequest
 import com.demo.book.utils.get
 import com.demo.book.utils.post
 import io.kotest.assertions.throwables.shouldThrow
@@ -106,15 +106,15 @@ class MovieApiTest : BaseIntegrationSpec() {
         }
     }
 
-    private fun createNewMovie(avengersMovie: MovieRequest): HttpResponse<Any> {
+    private fun createNewMovie(avengersMovie: CreateMovieRequest): HttpResponse<Any> {
         return httpClient.post(
             url = "/movies",
             body = jsonMapper.writeValueAsString(avengersMovie)
         )
     }
 
-    private fun newMovieRequest(startTime: Long, endTime: Long): MovieRequest {
-        return MovieRequest(
+    private fun newMovieRequest(startTime: Long, endTime: Long): CreateMovieRequest {
+        return CreateMovieRequest(
             "Avengers",
             (endTime - startTime).toInt()
         )
