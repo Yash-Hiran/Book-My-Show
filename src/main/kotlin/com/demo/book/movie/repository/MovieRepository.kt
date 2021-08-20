@@ -7,8 +7,6 @@ import movie.GetAllMoviesQuery
 import movie.SaveMovieParams
 import movie.SaveMovieQuery
 import norm.query
-import java.sql.Timestamp
-import java.time.Instant
 import javax.inject.Inject
 import javax.inject.Singleton
 import javax.sql.DataSource
