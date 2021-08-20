@@ -10,22 +10,13 @@ import io.kotest.matchers.shouldBe
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.exceptions.HttpClientResponseException
-import java.time.ZoneId
-import java.time.ZonedDateTime
 
 class MovieApiTest : BaseIntegrationSpec() {
 
     init {
         "should save movie" {
-            // Given
-            val referenceDate = ZonedDateTime.of(2021, 5, 21, 11, 15, 0, 0, ZoneId.systemDefault())
-            val avengersMovie = newMovieRequest(
-                referenceDate.toInstant().toEpochMilli() / 60000,
-                referenceDate.plusHours(2).toInstant().toEpochMilli() / 60000
-            )
-
             // When
-            val response = createNewMovie(avengersMovie)
+            val response = createNewMovie(newMovieRequest(100))
 
             // Then
             response.status shouldBe HttpStatus.OK
@@ -33,14 +24,8 @@ class MovieApiTest : BaseIntegrationSpec() {
         }
 
         "should get all saved movies" {
-            // Given
-            val referenceDate = ZonedDateTime.of(2021, 6, 1, 9, 15, 0, 0, ZoneId.systemDefault())
-            createNewMovie(newMovieRequest(
-                referenceDate.toInstant().toEpochMilli() / 60000,
-                referenceDate.plusHours(2).toInstant().toEpochMilli() / 60000
-            ))
-
             // When
+            createNewMovie(newMovieRequest(100))
             val response = httpClient.get<List<Movie>>("/movies")
 
             // Then
@@ -51,20 +36,14 @@ class MovieApiTest : BaseIntegrationSpec() {
                 |{
                 |  "id" : 1,
                 |  "title" : "Avengers",
-                |  "duration" : 120
+                |  "duration" : 100
                 |}
             """.trimMargin().trimIndent()
         }
 
         "should fail for adding movie with invalid duration" {
-            // Given
-            val referenceDate = ZonedDateTime.of(2021, 6, 1, 9, 15, 0, 0, ZoneId.systemDefault())
-
             // When
-            shouldThrow<HttpClientResponseException> { createNewMovie(newMovieRequest(
-                referenceDate.toInstant().toEpochMilli() / 60000,
-                referenceDate.plusHours(8).toInstant().toEpochMilli() / 60000
-            )) }
+            shouldThrow<HttpClientResponseException> { createNewMovie(newMovieRequest(480)) }
 
             // Then
             val response = httpClient.get<List<Movie>>("/movies")
@@ -74,14 +53,8 @@ class MovieApiTest : BaseIntegrationSpec() {
         }
 
         "should succeed for edge case 5 min" {
-            // Given
-            val referenceDate = ZonedDateTime.of(2021, 6, 1, 9, 15, 0, 0, ZoneId.systemDefault())
-
             // When
-            val response = createNewMovie(newMovieRequest(
-                referenceDate.toInstant().toEpochMilli() / 60000,
-                referenceDate.plusMinutes(5).toInstant().toEpochMilli() / 60000
-            ))
+            val response = createNewMovie(newMovieRequest(5))
 
             // Then
             response.status shouldBe HttpStatus.OK
@@ -90,14 +63,8 @@ class MovieApiTest : BaseIntegrationSpec() {
         }
 
         "should succeed for edge case 6 hours" {
-            // Given
-            val referenceDate = ZonedDateTime.of(2021, 6, 1, 9, 15, 0, 0, ZoneId.systemDefault())
-
             // When
-            val response = createNewMovie(newMovieRequest(
-                referenceDate.toInstant().toEpochMilli() / 60000,
-                referenceDate.plusHours(6).toInstant().toEpochMilli() / 60000
-            ))
+            val response = createNewMovie(newMovieRequest(360))
 
             // Then
             response.status shouldBe HttpStatus.OK
@@ -113,10 +80,10 @@ class MovieApiTest : BaseIntegrationSpec() {
         )
     }
 
-    private fun newMovieRequest(startTime: Long, endTime: Long): CreateMovieRequest {
+    private fun newMovieRequest(duration: Int): CreateMovieRequest {
         return CreateMovieRequest(
             "Avengers",
-            (endTime - startTime).toInt()
+            duration
         )
     }
 }
