@@ -63,7 +63,10 @@ class ShowApiTest : BaseIntegrationSpec() {
 
 
         return CreateShowRequest(
-             1, LocalDate.of(2021, Month.AUGUST, 23), LocalDateTime.of(2021, Month.AUGUST, 23, 9, 0), LocalDateTime.of(2021, Month.AUGUST, 23, 12, 0)
+             1,
+            LocalDate.of(2021, Month.AUGUST, 23),
+            LocalDateTime.of(2021, Month.AUGUST, 23, 9, 0),
+            LocalDateTime.of(2021, Month.AUGUST, 23, 12, 0)
         )
     }
 
