@@ -1,17 +1,20 @@
 package com.demo.authentication.api
 
+import com.demo.authentication.AuthenticationIntegrationSpec
 import com.demo.authentication.exception.InvalidUsernameOrPasswordException
 import com.demo.authentication.userCredentials.request.CredentialRequest
 import com.demo.authentication.userCredentials.service.AuthenticationService
-import com.demo.book.BaseIntegrationSpec
+import com.demo.book.utils.post
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
+import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 
-class AuthenticationApiTest : BaseIntegrationSpec() {
+class AuthenticationApiTest : StringSpec() {
     private val mockAuthenticationService = mockk<AuthenticationService>()
     private val authenticationApi = AuthenticationApi(mockAuthenticationService)
 
