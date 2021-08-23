@@ -50,7 +50,7 @@ class ShowApiTest : BaseIntegrationSpec() {
             response.body.get() shouldBe 1
 
         }
-        
+
     }
 
     private fun createNewShow(show: CreateShowRequest): HttpResponse<Any> {

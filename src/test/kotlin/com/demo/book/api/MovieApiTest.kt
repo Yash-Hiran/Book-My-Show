@@ -40,37 +40,6 @@ class MovieApiTest : BaseIntegrationSpec() {
                 |}
             """.trimMargin().trimIndent()
         }
-
-        "should fail for adding movie with invalid duration" {
-            // When
-            shouldThrow<HttpClientResponseException> { createNewMovie(newMovieRequest(480)) }
-
-            // Then
-            val response = httpClient.get<List<Movie>>("/movies")
-            response.status shouldBe HttpStatus.OK
-            val savedMovies = response.body.get()
-            savedMovies.size shouldBe 0
-        }
-
-        "should succeed for edge case 5 min" {
-            // When
-            val response = createNewMovie(newMovieRequest(5))
-
-            // Then
-            response.status shouldBe HttpStatus.OK
-            val savedMovieId = response.body.get()
-            savedMovieId shouldBe 1
-        }
-
-        "should succeed for edge case 6 hours" {
-            // When
-            val response = createNewMovie(newMovieRequest(360))
-
-            // Then
-            response.status shouldBe HttpStatus.OK
-            val savedMovieId = response.body.get()
-            savedMovieId shouldBe 1
-        }
     }
 
     private fun createNewMovie(avengersMovie: CreateMovieRequest): HttpResponse<Any> {
