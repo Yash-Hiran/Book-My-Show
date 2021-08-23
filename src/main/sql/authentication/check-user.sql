@@ -1,2 +1,2 @@
-SELECT name, password FROM users
-WHERE name = :name AND password = CRYPT(:password, GEN_SALT('bf'));
+SELECT username FROM users
+WHERE username = :username AND password = CRYPT(:password, password);
