@@ -34,15 +34,16 @@ class AuthenticationApiTest : StringSpec() {
         "should fail to authenticate with invalid credentials" {
             // given
             val credentials = CredentialRequest("mihir", "bar")
-            every { mockAuthenticationService.checkCredentials(any()) } returns false
+            every { mockAuthenticationService.checkCredentials(any()) } throws
+                    InvalidUsernameOrPasswordException("com.authentication.api.repository")
 
             // when
             val exception = shouldThrow<InvalidUsernameOrPasswordException> { authenticationApi.login(credentials) }
 
             // then
             verify(exactly = 1) { mockAuthenticationService.checkCredentials(credentials) }
-            exception shouldBe InvalidUsernameOrPasswordException()
-            exception.message shouldBe "Error: Invalid username or password"
+            exception.message shouldBe "Invalid username or password"
+            exception.code shouldBe "com.authentication.api.repository"
         }
     }
 }

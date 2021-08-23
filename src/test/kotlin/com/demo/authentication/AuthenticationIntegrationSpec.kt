@@ -8,7 +8,7 @@ import javax.inject.Inject
 import javax.sql.DataSource
 
 @MicronautTest
-open class AuthenticationIntegrationSpec : StringSpec() {
+abstract class AuthenticationIntegrationSpec : StringSpec() {
     @Inject
     protected lateinit var dataSource: DataSource
 

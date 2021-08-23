@@ -1,8 +1,10 @@
 package com.demo.authentication.userCredentials.service
 
 import com.demo.IsolatedTestSpec
+import com.demo.authentication.exception.InvalidUsernameOrPasswordException
 import com.demo.authentication.userCredentials.repository.AuthenticationRepository
 import com.demo.authentication.userCredentials.request.CredentialRequest
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
@@ -26,17 +28,21 @@ class AuthenticationServiceTest : IsolatedTestSpec() {
             result shouldBe true
         }
 
-        "should return false for incorrect credentials" {
+        "should throw exception for incorrect credentials" {
             // given
             val credentials = CredentialRequest("mihir", "12345")
-            every { mockAuthenticationRepository.checkCredentials(any()) } returns false
+            every { mockAuthenticationRepository.checkCredentials(any()) } throws
+                    InvalidUsernameOrPasswordException("com.authentication.api.service")
 
             // when
-            val result = authenticationService.checkCredentials(credentials)
+            val exception =
+                shouldThrow<InvalidUsernameOrPasswordException>
+                { authenticationService.checkCredentials(credentials) }
 
             // then
             verify(exactly = 1) { mockAuthenticationRepository.checkCredentials(credentials) }
-            result shouldBe false
+            exception.message shouldBe "Invalid username or password"
+            exception.code shouldBe "com.authentication.api.service"
         }
     }
 }

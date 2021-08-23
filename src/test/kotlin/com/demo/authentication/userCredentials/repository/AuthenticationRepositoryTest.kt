@@ -53,6 +53,8 @@ class AuthenticationRepositoryTest(@Inject private val dataSource: DataSource) :
     }
 
     private fun createUser() = dataSource.connection.use {
-        it.executeCommand("""insert into users (username, password) values ('mihir', CRYPT('12345', gen_salt('bf')));""")
+        it.executeCommand("""insert into users (username, password)
+            | values ('mihir', CRYPT('12345', gen_salt('bf')));
+            | """.trimMargin())
     }
 }
