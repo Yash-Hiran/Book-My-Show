@@ -1,10 +1,8 @@
 package com.demo.book.movie.repository
 
-import com.demo.book.movie.entity.Movie
 import com.demo.book.movie.request.CreateShowRequest
 import com.demo.book.show.entity.Show
 import norm.query
-import java.sql.Date
 import show.GetAllShowsParams
 import show.GetAllShowsQuery
 import show.SaveShowParams
@@ -16,14 +14,14 @@ import javax.sql.DataSource
 
 @Singleton
 class ShowRepository(@Inject private val datasource: DataSource) {
-    fun save(showToSave: CreateShowRequest, endTime : Timestamp): Show = datasource.connection.use { connection ->
-       SaveShowQuery().query(
+    fun save(showToSave: CreateShowRequest, endTime: Timestamp): Show = datasource.connection.use { connection ->
+        SaveShowQuery().query(
             connection,
-           SaveShowParams(
+            SaveShowParams(
                 showToSave.movieId,
-               showToSave.showDate,
-               showToSave.startTime,
-               endTime
+                showToSave.showDate,
+                showToSave.startTime,
+                endTime
             )
         )
     }.map {

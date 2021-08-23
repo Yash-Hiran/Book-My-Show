@@ -39,7 +39,8 @@ class MovieRepository(@Inject private val datasource: DataSource) {
             it.duration
         )
     }
-    fun getMovieWithId(id:Int) = datasource.connection.use { connection ->
+
+    fun getMovieWithId(id: Int) = datasource.connection.use { connection ->
         GetMovieByIdQuery().query(
             connection,
             GetMovieByIdParams(id)

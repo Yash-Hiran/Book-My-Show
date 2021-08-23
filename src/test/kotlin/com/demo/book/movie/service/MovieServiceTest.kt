@@ -30,24 +30,26 @@ class MovieServiceTest : StringSpec({
         val movieRequest = CreateMovieRequest("Avengers", 3)
         val exception = shouldThrow<InvalidMovieDetailsException> { movieService.save(movieRequest) }
 
-        exception.message shouldBe "Movie Duration is not within time limit. It must be greater than 5 and less than 360"
+        exception.message shouldBe "Movie Duration is not within time limit. " +
+                "It must be greater than 5 and less than 360"
     }
     "should throw an exception when duration is more than 360" {
         val movieRequest = CreateMovieRequest("Avengers", 370)
         val exception = shouldThrow<InvalidMovieDetailsException> { movieService.save(movieRequest) }
 
-        exception.message shouldBe "Movie Duration is not within time limit. It must be greater than 5 and less than 360"
+        exception.message shouldBe "Movie Duration is not within time limit. " +
+                "It must be greater than 5 and less than 360"
     }
 
     "should get Movie object when searching by id that exists" {
-        every{movieRepositoryMock.getMovieWithId(4)}.returns(listOf(Movie(4, "Avengers", 90)))
-         val movie=movieService.getMovieWithId(4)
+        every { movieRepositoryMock.getMovieWithId(4) }.returns(listOf(Movie(4, "Avengers", 90)))
+        val movie = movieService.getMovieWithId(4)
         movie shouldBe Movie(4, "Avengers", 90)
     }
 
     "should return an exception when searching a non existent id" {
-        every{movieRepositoryMock.getMovieWithId(any())}.returns(listOf())
-        val movie= shouldThrow<InvalidMovieDetailsException>{movieService.getMovieWithId(4)}
+        every { movieRepositoryMock.getMovieWithId(any()) }.returns(listOf())
+        val movie = shouldThrow<InvalidMovieDetailsException> { movieService.getMovieWithId(4) }
         movie.message shouldBe "Movie Id does not exist"
     }
 })

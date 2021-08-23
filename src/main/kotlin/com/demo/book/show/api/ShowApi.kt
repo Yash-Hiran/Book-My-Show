@@ -1,6 +1,5 @@
 package com.demo.book.api
 
-import com.demo.book.movie.entity.Movie
 import com.demo.book.movie.service.ShowService
 import com.demo.book.movie.request.CreateShowRequest
 import com.demo.book.show.entity.Show
@@ -11,7 +10,6 @@ import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Post
 import javax.inject.Inject
 
-
 @Controller
 class ShowApi(@Inject val showService: ShowService) {
 
@@ -20,10 +18,8 @@ class ShowApi(@Inject val showService: ShowService) {
         return HttpResponse.ok(showService.allShows())
     }
 
-
     @Post("/shows")
     fun saveShow(@Body showRequest: CreateShowRequest): HttpResponse<Int> {
         return HttpResponse.ok(showService.save(showRequest).id)
     }
 }
-

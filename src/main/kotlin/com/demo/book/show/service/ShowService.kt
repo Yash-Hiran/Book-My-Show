@@ -17,11 +17,10 @@ class ShowService(@Inject val showRepository: ShowRepository, val movieRepositor
         val movie = movieService.getMovieWithId(showRequest.movieId)
         val endTime = showRequest.startTime.toLocalDateTime().plusMinutes(movie.duration.toLong())
         val endTimeInTimeStamp = Timestamp.valueOf(endTime)
-        return showRepository.save(showRequest,endTimeInTimeStamp)
+        return showRepository.save(showRequest, endTimeInTimeStamp)
     }
 
     fun allShows(): List<Show> {
         return showRepository.findAll()
     }
 }
-
