@@ -11,19 +11,20 @@ import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import java.time.Month
+
 
 class ShowApiTest : BaseIntegrationSpec() {
 
     init {
 
+
         "should get all saved shows" {
             // When
-            val string = "2017-07-25"
-            val showDate = LocalDate.parse(string, DateTimeFormatter.ISO_DATE)
-            createNewShow(newShowRequest(showDate))
-            val response = httpClient.get<List<Show>>("/shows")
+            createNewShow(newShowRequest())
 
+
+            val response = httpClient.get<List<Show>>("/shows")
             // Then
             response.status shouldBe HttpStatus.OK
             val savedShows = response.body.get()
@@ -36,18 +37,33 @@ class ShowApiTest : BaseIntegrationSpec() {
             """.trimMargin().trimIndent()
 
         }
+
+        "should add show " {
+            // When
+            val response = createNewShow(newShowRequest())
+
+            // Then
+            response.status shouldBe HttpStatus.OK
+
+            val savedShows = response.body.get()
+            response.body.get() shouldBe 1
+
+        }
         
     }
+
     private fun createNewShow(show: CreateShowRequest): HttpResponse<Any> {
         return httpClient.post(
             url = "/shows",
-            body = jsonMapper.writeValueAsString(show)
+            body = jsonString(show)
         )
     }
 
-    private fun newShowRequest(showDate : LocalDate): CreateShowRequest {
+    private fun newShowRequest(): CreateShowRequest {
+
+
         return CreateShowRequest(
-             1, showDate, LocalDateTime.now() ,  LocalDateTime.now()
+             1, LocalDate.of(2021, Month.AUGUST, 23), LocalDateTime.of(2021, Month.AUGUST, 23, 9, 0), LocalDateTime.of(2021, Month.AUGUST, 23, 12, 0)
         )
     }
 

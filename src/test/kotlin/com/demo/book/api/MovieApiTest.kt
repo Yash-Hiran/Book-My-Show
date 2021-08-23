@@ -76,7 +76,7 @@ class MovieApiTest : BaseIntegrationSpec() {
     private fun createNewMovie(avengersMovie: CreateMovieRequest): HttpResponse<Any> {
         return httpClient.post(
             url = "/movies",
-            body = jsonMapper.writeValueAsString(avengersMovie)
+            body = jsonString(avengersMovie)
         )
     }
 

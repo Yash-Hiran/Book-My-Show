@@ -20,7 +20,7 @@ public class GetAllShowsParamSetter : ParamSetter<GetAllShowsParams> {
 
 public data class GetAllShowsResult(
   public val id: Int,
-  public val showDate: Date?,
+  public val showDate: Date,
   public val title: String,
   public val startTime: Timestamp,
   public val duration: Int
@@ -29,7 +29,7 @@ public data class GetAllShowsResult(
 public class GetAllShowsRowMapper : RowMapper<GetAllShowsResult> {
   public override fun map(rs: ResultSet): GetAllShowsResult = GetAllShowsResult(
   id = rs.getObject("id") as kotlin.Int,
-    showDate = rs.getObject("show_date") as java.sql.Date?,
+    showDate = rs.getObject("show_date") as java.sql.Date,
     title = rs.getObject("title") as kotlin.String,
     startTime = rs.getObject("start_time") as java.sql.Timestamp,
     duration = rs.getObject("duration") as kotlin.Int)

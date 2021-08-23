@@ -20,9 +20,9 @@ class ShowApi(@Inject val showService: ShowService) {
         return HttpResponse.ok(showService.allShows())
     }
 
-  /*  @Post("/shows")
-    fun saveMovie(@Body movieRequest: CreateShowRequest): HttpResponse<Int> {
-            return HttpResponse.ok(movieService.save(movieRequest).id)
+    /* @Post("/shows")
+    fun saveMovie(@Body showRequest: CreateShowRequest): HttpResponse<Int> {
+      return HttpResponse.ok(showService.save(showRequest).id)
     }*/
 }
 

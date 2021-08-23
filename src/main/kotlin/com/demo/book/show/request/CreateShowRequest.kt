@@ -5,4 +5,6 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
-data class CreateShowRequest(val movieId : Int, val date : LocalDate, val startTime : LocalDateTime, val endTime : LocalDateTime)
+data class CreateShowRequest(val movieId: Int, val showDate: LocalDate, val startTime: LocalDateTime, val endTime: LocalDateTime) {
+
+}
