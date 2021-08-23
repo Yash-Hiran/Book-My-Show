@@ -30,18 +30,18 @@ public class SaveShowParamSetter : ParamSetter<SaveShowParams> {
 public data class SaveShowResult(
   public val id: Int,
   public val movieId: Int,
+  public val showDate: Date,
   public val startTime: Timestamp,
-  public val endTime: Timestamp,
-  public val showDate: Date
+  public val endTime: Timestamp
 )
 
 public class SaveShowRowMapper : RowMapper<SaveShowResult> {
   public override fun map(rs: ResultSet): SaveShowResult = SaveShowResult(
   id = rs.getObject("id") as kotlin.Int,
     movieId = rs.getObject("movie_id") as kotlin.Int,
+    showDate = rs.getObject("show_date") as java.sql.Date,
     startTime = rs.getObject("start_time") as java.sql.Timestamp,
-    endTime = rs.getObject("end_time") as java.sql.Timestamp,
-    showDate = rs.getObject("show_date") as java.sql.Date)
+    endTime = rs.getObject("end_time") as java.sql.Timestamp)
 }
 
 public class SaveShowQuery : Query<SaveShowParams, SaveShowResult> {

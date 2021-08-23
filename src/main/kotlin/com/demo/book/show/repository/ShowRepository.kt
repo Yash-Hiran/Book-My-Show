@@ -3,8 +3,8 @@ package com.demo.book.movie.repository
 import com.demo.book.movie.entity.Movie
 import com.demo.book.movie.request.CreateShowRequest
 import com.demo.book.show.entity.Show
-import liquibase.pro.packaged.it
 import norm.query
+import java.sql.Date
 import show.GetAllShowsParams
 import show.GetAllShowsQuery
 import show.SaveShowParams
@@ -16,23 +16,26 @@ import javax.sql.DataSource
 
 @Singleton
 class ShowRepository(@Inject private val datasource: DataSource) {
-/*
-    fun save(showToSave: CreateShowRequest): Movie = datasource.connection.use { connection ->
+    fun save(showToSave: CreateShowRequest): Show = datasource.connection.use { connection ->
        SaveShowQuery().query(
             connection,
            SaveShowParams(
                 showToSave.movieId,
                showToSave.showDate,
-                       showToSave.
+               showToSave.startTime,
+               showToSave.endTime
             )
         )
     }.map {
-        Movie(
+        Show(
             it.id,
-            it.title,
-            it.duration
+            it.movieId,
+            it.showDate,
+            it.startTime,
+            it.endTime
+
         )
-    }.first()*/
+    }.first()
 
     fun findAll(): List<Show> = datasource.connection.use { connection ->
         GetAllShowsQuery().query(
@@ -42,10 +45,10 @@ class ShowRepository(@Inject private val datasource: DataSource) {
     }.map {
         Show(
             it.id,
-            it.title,
-            it.showDate!!.toLocalDate() ,
-            it.startTime.toLocalDateTime(),
-            it.duration
+            it.movieId,
+            it.showDate,
+            it.startTime,
+            it.endTime
 
         )
     }

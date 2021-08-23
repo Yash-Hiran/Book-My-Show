@@ -18,4 +18,12 @@ class MovieService(@Inject val movieRepository: MovieRepository) {
     fun allMovies(): List<Movie> {
         return movieRepository.findAll()
     }
+
+    fun getMovieWithId(id: Int) :Movie {
+        val movieList = movieRepository.getMovieWithId(id)
+        if (movieList.isEmpty()){
+            throw InvalidMovieDurationException("wrong id")
+        }
+        return movieList.first()
+    }
 }

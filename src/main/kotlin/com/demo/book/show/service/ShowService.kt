@@ -9,9 +9,14 @@ import javax.inject.Singleton
 
 @Singleton
 class ShowService(@Inject val showRepository: ShowRepository) {
-    /*fun save(showRequest: CreateShowRequest): Movie {
+    fun save(showRequest: CreateShowRequest): Show {
+        // Validation : id -> iterate over db
+//        if(true)
+//            //check overlap
+//        else
+//            exception throw
         return showRepository.save(showRequest)
-    }*/
+    }
 
     fun allShows(): List<Show> {
         return showRepository.findAll()
