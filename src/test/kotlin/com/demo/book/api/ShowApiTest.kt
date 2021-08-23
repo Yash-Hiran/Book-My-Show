@@ -44,7 +44,6 @@ class ShowApiTest : BaseIntegrationSpec() {
                 |  "showDate" : 1629743400000,
                 |  "startTime" : 1629800436068,
                 |  "endTime" : 1629806436068
-                   
                 |}
             """.trimMargin().trimIndent()
 
@@ -52,13 +51,15 @@ class ShowApiTest : BaseIntegrationSpec() {
 
         "should add show " {
             // When
+            createNewMovie(newMovieRequest(100)).body.get()
+            createNewShow(newShowRequest())
             val response = createNewShow(newShowRequest())
 
             // Then
             response.status shouldBe HttpStatus.OK
 
             val savedShows = response.body.get()
-            response.body.get() shouldBe 1
+            response.body.get() shouldBe 2
 
 
         }
