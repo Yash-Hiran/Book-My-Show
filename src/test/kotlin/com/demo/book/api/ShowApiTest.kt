@@ -30,7 +30,7 @@ class ShowApiTest : BaseIntegrationSpec() {
                 |{
                 |  "id" : 1,
                 |  "movieId" : 1,
-                |  "showDate" : 1629743400000,
+                |  "showDate" : 1629829800000,
                 |  "startTime" : 1629800436068,
                 |  "endTime" : 1629806436068
                 |}
@@ -61,7 +61,7 @@ class ShowApiTest : BaseIntegrationSpec() {
     private fun newShowRequest(): CreateShowRequest {
         return CreateShowRequest(
             1,
-            Date.valueOf("2021-08-24"),
+            Date.valueOf("2021-08-25"),
             Timestamp.valueOf("2021-08-24 15:50:36.0680763")
         )
     }
