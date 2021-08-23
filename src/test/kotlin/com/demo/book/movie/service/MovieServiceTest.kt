@@ -51,5 +51,4 @@ class MovieServiceTest : StringSpec({
         response shouldBe Movie(1, "Avengers", 5)
         verify(exactly = 1) { movieRepositoryMock.save(movieRequest) }
     }
-
 })
