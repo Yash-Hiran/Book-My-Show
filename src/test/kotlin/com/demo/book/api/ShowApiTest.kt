@@ -30,7 +30,7 @@ class ShowApiTest : BaseIntegrationSpec() {
                 |{
                 |  "id" : 1,
                 |  "movieId" : 1,
-                |  "showDate" : 1629829800000,
+                |  "showDate" : 1629849600000,
                 |  "startTime" : 1629800436068,
                 |  "endTime" : 1629806436068
                 |}
