@@ -80,6 +80,7 @@ class MovieApiTest : BaseIntegrationSpec() {
         )
     }
 
+
     private fun newMovieRequest(duration: Int): CreateMovieRequest {
         return CreateMovieRequest(
             "Avengers",

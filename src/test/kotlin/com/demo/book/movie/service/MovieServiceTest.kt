@@ -30,6 +30,13 @@ class MovieServiceTest : StringSpec({
         val movieRequest = CreateMovieRequest("Avengers", 3)
         val exception = shouldThrow<InvalidMovieDurationException> { movieService.save(movieRequest) }
 
-        exception.message shouldBe "Movie duration is less than 5"
+
+        exception.message shouldBe "Movie Duration is not within time limit. It must be greater than 5 and less than 360"
+    }
+    "should throw an exception when duration is more than 360" {
+        val movieRequest = CreateMovieRequest("Avengers", 370)
+        val exception = shouldThrow<InvalidMovieDurationException> { movieService.save(movieRequest) }
+
+        exception.message shouldBe "Movie Duration is not within time limit. It must be greater than 5 and less than 360"
     }
 })
