@@ -8,6 +8,6 @@ import java.time.LocalTime
 import java.util.*
 import java.sql.Date
 
-data class CreateShowRequest(val movieId: Int, val showDate: Date, val startTime: Timestamp, val endTime: Timestamp) {
+data class CreateShowRequest(val movieId: Int, val showDate: Date, val startTime: Timestamp) {
 //init{end = start + movie.duration}
 }

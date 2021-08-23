@@ -12,7 +12,8 @@ import io.micronaut.http.HttpStatus
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.Month
-
+import java.sql.Date
+import java.sql.Timestamp
 
 class ShowApiTest : BaseIntegrationSpec() {
 
@@ -64,9 +65,8 @@ class ShowApiTest : BaseIntegrationSpec() {
 
         return CreateShowRequest(
              1,
-            LocalDate.of(2021, Month.AUGUST, 23),
-            LocalDateTime.of(2021, Month.AUGUST, 23, 9, 0),
-            LocalDateTime.of(2021, Month.AUGUST, 23, 12, 0)
+            Date.valueOf("2021-08-24"),
+            Timestamp.valueOf("2021-08-24 15:50:36.0680763")
         )
     }
 

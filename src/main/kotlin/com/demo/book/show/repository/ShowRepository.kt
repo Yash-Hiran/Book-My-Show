@@ -16,14 +16,14 @@ import javax.sql.DataSource
 
 @Singleton
 class ShowRepository(@Inject private val datasource: DataSource) {
-    fun save(showToSave: CreateShowRequest): Show = datasource.connection.use { connection ->
+    fun save(showToSave: CreateShowRequest, endTime : Timestamp): Show = datasource.connection.use { connection ->
        SaveShowQuery().query(
             connection,
            SaveShowParams(
                 showToSave.movieId,
                showToSave.showDate,
                showToSave.startTime,
-               showToSave.endTime
+               endTime
             )
         )
     }.map {

@@ -50,5 +50,5 @@ class MovieRepository(@Inject private val datasource: DataSource) {
                 it.duration
             )
         }
-
+    }
 }
