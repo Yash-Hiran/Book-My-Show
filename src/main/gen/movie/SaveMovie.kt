@@ -2,7 +2,6 @@ package movie
 
 import java.sql.PreparedStatement
 import java.sql.ResultSet
-import java.sql.Timestamp
 import kotlin.Int
 import kotlin.String
 import kotlin.Unit
@@ -11,8 +10,8 @@ import norm.Query
 import norm.RowMapper
 
 public data class SaveMovieParams(
-  public val title: String,
-  public val duration: Int
+  public val title: String?,
+  public val duration: Int?
 )
 
 public class SaveMovieParamSetter : ParamSetter<SaveMovieParams> {
