@@ -5,7 +5,7 @@ import com.demo.authentication.userCredentials.request.CredentialRequest
 import io.kotest.matchers.shouldBe
 import norm.executeCommand
 
-class AuthenticationRepositoryTest : AuthenticationIntegrationSpec() {
+class AuthenticationRepositoryTest: AuthenticationIntegrationSpec() {
     private val authenticationRepository = AuthenticationRepository(dataSource)
 
     init {
@@ -23,8 +23,8 @@ class AuthenticationRepositoryTest : AuthenticationIntegrationSpec() {
 
         "should return false for incorrect credentials" {
             // given
-            val credentials = CredentialRequest("yash", "asdf")
-            createUser("mihir", "12345")
+            val credentials = CredentialRequest("raj", "xyz")
+            createUser("yash", "asdf")
 
             // when
             val result = authenticationRepository.checkCredentials(credentials)
@@ -34,9 +34,11 @@ class AuthenticationRepositoryTest : AuthenticationIntegrationSpec() {
         }
     }
 
-    private fun  createUser(username: String, password: String) = dataSource.connection.use { it.executeCommand("""
-        |INSERT INTO users(username, password)
-        |VALUES ('$username', CRYPT('$password', GEN_SALT('bf')));
-        |""".trimMargin().trimIndent())
+    private fun  createUser(username: String, password: String) = dataSource.connection.use {
+        it.executeCommand("""
+            |INSERT INTO users(username, password)
+            |VALUES ($username, CRYPT($password, GEN_SALT('bf')));
+            |""".trimMargin().trimIndent()
+        )
     }
 }
