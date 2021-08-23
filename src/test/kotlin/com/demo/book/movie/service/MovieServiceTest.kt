@@ -16,7 +16,7 @@ class MovieServiceTest : StringSpec({
     val movieRepositoryMock = mockk<MovieRepository>()
     val movieService = MovieService(movieRepositoryMock)
 
-    "should save movie to repository" {
+    "should save movie to repository when duration is within time limit" {
         every { movieRepositoryMock.save(any()) }.returns(Movie(1, "Avengers", 90))
 
         val movieRequest = CreateMovieRequest("Avengers", 90)
@@ -30,13 +30,26 @@ class MovieServiceTest : StringSpec({
         val movieRequest = CreateMovieRequest("Avengers", 3)
         val exception = shouldThrow<InvalidMovieDurationException> { movieService.save(movieRequest) }
 
-
-        exception.message shouldBe "Movie Duration is not within time limit. It must be greater than 5 and less than 360"
+        exception.message shouldBe
+                "Movie Duration is not within time limit. It must be greater than 5 and less than 360"
     }
+
     "should throw an exception when duration is more than 360" {
         val movieRequest = CreateMovieRequest("Avengers", 370)
         val exception = shouldThrow<InvalidMovieDurationException> { movieService.save(movieRequest) }
 
-        exception.message shouldBe "Movie Duration is not within time limit. It must be greater than 5 and less than 360"
+        exception.message shouldBe
+                "Movie Duration is not within time limit. It must be greater than 5 and less than 360"
     }
+
+    "should save movie to repository when duration is 5" {
+        every { movieRepositoryMock.save(any()) }.returns(Movie(1, "Avengers", 5))
+
+        val movieRequest = CreateMovieRequest("Avengers", 5)
+        val response = movieService.save(movieRequest)
+
+        response shouldBe Movie(1, "Avengers", 5)
+        verify(exactly = 1) { movieRepositoryMock.save(movieRequest) }
+    }
+
 })

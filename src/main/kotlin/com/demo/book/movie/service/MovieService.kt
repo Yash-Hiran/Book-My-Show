@@ -10,9 +10,10 @@ import javax.inject.Singleton
 @Singleton
 class MovieService(@Inject val movieRepository: MovieRepository) {
     fun save(movieRequest: CreateMovieRequest): Movie {
-
-        if(movieRequest.isNotWithinTimeLimits())
-            throw InvalidMovieDurationException(message = "Movie Duration is not within time limit. It must be greater than 5 and less than 360")
+        if (movieRequest.isNotWithinTimeLimits())
+            throw InvalidMovieDurationException(
+                message = "Movie Duration is not within time limit. It must be greater than 5 and less than 360"
+            )
         return movieRepository.save(movieRequest)
     }
 

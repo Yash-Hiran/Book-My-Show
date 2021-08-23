@@ -10,7 +10,6 @@ import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Post
 import javax.inject.Inject
 
-
 @Controller
 class MovieApi(@Inject val movieService: MovieService) {
 
@@ -21,7 +20,6 @@ class MovieApi(@Inject val movieService: MovieService) {
 
     @Post("/movies")
     fun saveMovie(@Body movieRequest: CreateMovieRequest): HttpResponse<Int> {
-
-            return HttpResponse.ok(movieService.save(movieRequest).id)
+        return HttpResponse.ok(movieService.save(movieRequest).id)
     }
 }
