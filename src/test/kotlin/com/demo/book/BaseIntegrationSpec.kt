@@ -11,6 +11,7 @@ import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.annotation.Client
 import io.micronaut.test.extensions.kotest.annotation.MicronautTest
 import norm.executeCommand
+import java.text.DateFormat
 import javax.inject.Inject
 import javax.sql.DataSource
 
@@ -27,6 +28,7 @@ abstract class BaseIntegrationSpec : StringSpec() {
     protected val jsonMapper: ObjectMapper = jacksonObjectMapper().also {
         it.enable(SerializationFeature.INDENT_OUTPUT)
         it.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+        it.dateFormat=(DateFormat.getDateTimeInstance())
         it.registerModule(JavaTimeModule())
     }
 
