@@ -17,7 +17,10 @@ class ShowApi(@Inject val showService: ShowService) {
     fun allShows(): HttpResponse<List<Show>> {
         return HttpResponse.ok(showService.allShows())
     }
-
+    @Get("/shows/past")
+    fun allPastShows(): HttpResponse<List<Show>> {
+        return HttpResponse.ok(showService.allPastShows())
+    }
     @Post("/shows")
     fun saveShow(@Body showRequest: CreateShowRequest): HttpResponse<Int> {
         return HttpResponse.ok(showService.save(showRequest).id)

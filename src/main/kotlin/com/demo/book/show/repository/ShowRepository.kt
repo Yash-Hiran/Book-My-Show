@@ -52,4 +52,20 @@ class ShowRepository(@Inject private val datasource: DataSource) {
 
         )
     }
+
+    fun findAllPastShows(): List<Show> = datasource.connection.use { connection ->
+        GetAllShowsQuery().query(
+            connection,
+            GetAllShowsParams()
+        )
+    }.sortedByDescending{it.endTime.toLocalDateTime()}.filter { it.startTime.toLocalDateTime() < LocalDateTime.now() }.map {
+        Show(
+            it.id,
+            it.movieId,
+            it.showDate.toLocalDate(),
+            it.startTime.toLocalDateTime(),
+            it.endTime.toLocalDateTime()
+
+        )
+    }
 }

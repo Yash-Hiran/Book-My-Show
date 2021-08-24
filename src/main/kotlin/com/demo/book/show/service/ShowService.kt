@@ -45,4 +45,8 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
     fun allShows(): List<Show> {
         return showRepository.findAll()
     }
+
+    fun allPastShows(): List<Show> {
+        return showRepository.findAllPastShows()
+    }
 }
