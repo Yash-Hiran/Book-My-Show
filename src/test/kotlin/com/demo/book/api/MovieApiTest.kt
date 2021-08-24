@@ -71,8 +71,21 @@ class MovieApiTest : BaseIntegrationSpec() {
             val savedMovieId = response.body.get()
             savedMovieId shouldBe 1
         }
-    }
 
+
+        "should get an empty list when no movies stored" {
+            // When
+            val response = httpClient.get<List<Movie>>("/movies")
+
+            // Then
+            response.status shouldBe HttpStatus.OK
+            val savedMovies = response.body.get()
+            savedMovies.size shouldBe 0
+            jsonString(savedMovies) shouldBe """
+                "[ ]"
+            """.trimMargin().trimIndent()
+        }
+    }
     private fun createNewMovie(avengersMovie: CreateMovieRequest): HttpResponse<Any> {
         return httpClient.post(
             url = "/movies",
