@@ -1,6 +1,6 @@
-package com.demo.book.movie.request
+package com.demo.book.show.request
 
-import java.sql.Timestamp
-import java.sql.Date
+import java.time.LocalDate
+import java.time.LocalDateTime
 
-data class CreateShowRequest(val movieId: Int, val showDate: Date, val startTime: Timestamp)
+data class CreateShowRequest(val movieId: Int, val showDate: LocalDate, val startTime: LocalDateTime)

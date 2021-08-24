@@ -1,7 +1,7 @@
 package com.demo.book.api
 
-import com.demo.book.movie.service.ShowService
-import com.demo.book.movie.request.CreateShowRequest
+import com.demo.book.show.service.ShowService
+import com.demo.book.show.request.CreateShowRequest
 import com.demo.book.show.entity.Show
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.Body

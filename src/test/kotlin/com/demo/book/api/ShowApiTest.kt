@@ -2,15 +2,15 @@ package com.demo.book.api
 
 import com.demo.book.BaseIntegrationSpec
 import com.demo.book.movie.request.CreateMovieRequest
-import com.demo.book.movie.request.CreateShowRequest
+import com.demo.book.show.request.CreateShowRequest
 import com.demo.book.show.entity.Show
 import com.demo.book.utils.get
 import com.demo.book.utils.post
 import io.kotest.matchers.shouldBe
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
-import java.sql.Date
-import java.sql.Timestamp
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 class ShowApiTest : BaseIntegrationSpec() {
 
@@ -18,8 +18,11 @@ class ShowApiTest : BaseIntegrationSpec() {
 
         "should get all saved shows" {
             // When
+            val startDate = "2021-08-25"
+            val startTime = "2021-08-25T15:50:36.0680763"
+
             createNewMovie(newMovieRequest(100)).body.get()
-            createNewShow(newShowRequest())
+            createNewShow(newShowRequest(startDate,startTime))
 
             val response = httpClient.get<List<Show>>("/shows")
             // Then
@@ -30,24 +33,25 @@ class ShowApiTest : BaseIntegrationSpec() {
                 |{
                 |  "id" : 1,
                 |  "movieId" : 1,
-                |  "showDate" : 1629829800000,
-                |  "startTime" : 1629800436068,
-                |  "endTime" : 1629806436068
+                |  "showDate" : "2021-08-25",
+                |  "startTime" : "2021-08-25 03:50:36",
+                |  "endTime" : "2021-08-25 05:30:36"
                 |}
             """.trimMargin().trimIndent()
         }
 
         "should add show " {
             // When
+            val startDate = "2021-08-26"
+            val startTime = "2021-08-26T15:50:36.0680763"
             createNewMovie(newMovieRequest(100)).body.get()
-            createNewShow(newShowRequest())
-            val response = createNewShow(newShowRequest())
+            val response = createNewShow(newShowRequest(startDate,startTime))
 
             // Then
             response.status shouldBe HttpStatus.OK
 
             val savedShows = response.body.get()
-            response.body.get() shouldBe 2
+            savedShows shouldBe 1
         }
     }
 
@@ -58,11 +62,11 @@ class ShowApiTest : BaseIntegrationSpec() {
         )
     }
 
-    private fun newShowRequest(): CreateShowRequest {
+    private fun newShowRequest(startDate : String , startTime : String): CreateShowRequest {
         return CreateShowRequest(
             1,
-            Date.valueOf("2021-08-25"),
-            Timestamp.valueOf("2021-08-24 15:50:36.0680763")
+            LocalDate.parse(startDate),
+            LocalDateTime.parse(startTime)
         )
     }
 

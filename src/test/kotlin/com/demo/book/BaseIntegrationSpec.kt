@@ -28,7 +28,7 @@ abstract class BaseIntegrationSpec : StringSpec() {
     protected val jsonMapper: ObjectMapper = jacksonObjectMapper().also {
         it.enable(SerializationFeature.INDENT_OUTPUT)
         it.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-        it.dateFormat=(DateFormat.getDateTimeInstance())
+        it.dateFormat = (DateFormat.getDateTimeInstance())
         it.registerModule(JavaTimeModule())
     }
 

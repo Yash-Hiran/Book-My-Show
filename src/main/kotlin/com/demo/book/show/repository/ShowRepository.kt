@@ -1,36 +1,38 @@
-package com.demo.book.movie.repository
+package com.demo.book.show.repository
 
-import com.demo.book.movie.request.CreateShowRequest
+import com.demo.book.show.request.CreateShowRequest
 import com.demo.book.show.entity.Show
 import norm.query
 import show.GetAllShowsParams
 import show.GetAllShowsQuery
 import show.SaveShowParams
 import show.SaveShowQuery
+import java.sql.Date
 import java.sql.Timestamp
+import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
 import javax.sql.DataSource
 
 @Singleton
 class ShowRepository(@Inject private val datasource: DataSource) {
-    fun save(showToSave: CreateShowRequest, endTime: Timestamp): Show = datasource.connection.use { connection ->
+    fun save(showToSave: CreateShowRequest, endTime: LocalDateTime): Show = datasource.connection.use { connection ->
         SaveShowQuery().query(
             connection,
             SaveShowParams(
                 showToSave.movieId,
-                showToSave.showDate,
-                showToSave.startTime,
-                endTime
+                Date.valueOf(showToSave.showDate),
+                Timestamp.valueOf(showToSave.startTime),
+                Timestamp.valueOf(endTime)
             )
         )
     }.map {
         Show(
             it.id,
             it.movieId,
-            it.showDate,
-            it.startTime,
-            it.endTime
+            it.showDate.toLocalDate(),
+            it.startTime.toLocalDateTime(),
+            it.endTime.toLocalDateTime()
 
         )
     }.first()
@@ -44,9 +46,9 @@ class ShowRepository(@Inject private val datasource: DataSource) {
         Show(
             it.id,
             it.movieId,
-            it.showDate,
-            it.startTime,
-            it.endTime
+            it.showDate.toLocalDate(),
+            it.startTime.toLocalDateTime(),
+            it.endTime.toLocalDateTime()
 
         )
     }
