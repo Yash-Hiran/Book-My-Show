@@ -1,4 +1,4 @@
-## Tech Stack:
+compose u## Tech Stack:
 - Open JDK 11
 - [Micronaut Web Framework]((https://docs.micronaut.io/2.5.1/guide/index.html))
 - [Postgres](https://www.postgresql.org/docs/12/index.html) database
