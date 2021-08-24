@@ -13,16 +13,29 @@ import javax.sql.DataSource
 @MicronautTest
 class AuthenticationRepositoryTest(@Inject private val dataSource: DataSource) : StringSpec() {
     private val authenticationRepository = AuthenticationRepository(dataSource)
+
     override fun afterEach(testCase: TestCase, result: TestResult) {
         super.afterEach(testCase, result)
         clearData()
     }
+
     private fun clearData() = dataSource.connection.use {
         it.executeCommand("TRUNCATE TABLE users RESTART IDENTITY;")
     }
 
+    private fun addPgcrypto() = dataSource.connection.use {
+        it.executeCommand("CREATE EXTENSION pgcrypto;")
+    }
+
+    private fun createUser() = dataSource.connection.use {
+        it.executeCommand("""insert into users (username, password)
+            | values ('mihir', CRYPT('12345', gen_salt('bf')));
+            | """.trimMargin())
+    }
+
     init {
         addPgcrypto()
+
         "should return true for correct credentials" {
             // given
             val credentials = CredentialRequest("mihir", "12345")
@@ -46,15 +59,5 @@ class AuthenticationRepositoryTest(@Inject private val dataSource: DataSource) :
             // then
             result shouldBe false
         }
-    }
-
-    private fun addPgcrypto() = dataSource.connection.use {
-        it.executeCommand("CREATE EXTENSION pgcrypto;")
-    }
-
-    private fun createUser() = dataSource.connection.use {
-        it.executeCommand("""insert into users (username, password)
-            | values ('mihir', CRYPT('12345', gen_salt('bf')));
-            | """.trimMargin())
     }
 }

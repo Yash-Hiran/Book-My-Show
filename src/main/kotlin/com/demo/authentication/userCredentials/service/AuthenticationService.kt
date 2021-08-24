@@ -10,6 +10,6 @@ import javax.inject.Singleton
 class AuthenticationService(@Inject private val authenticationRepository: AuthenticationRepository) {
     fun checkCredentials(CredentialRequest: CredentialRequest): Boolean {
         val result = authenticationRepository.checkCredentials(CredentialRequest)
-        return if (result) true else throw InvalidUsernameOrPasswordException("com.authentication.api.service")
+        return if (result) true else throw InvalidUsernameOrPasswordException("com.authentication.service")
     }
 }

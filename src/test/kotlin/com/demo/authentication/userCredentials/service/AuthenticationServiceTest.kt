@@ -32,7 +32,7 @@ class AuthenticationServiceTest : IsolatedTestSpec() {
             // given
             val credentials = CredentialRequest("mihir", "12345")
             every { mockAuthenticationRepository.checkCredentials(any()) } throws
-                    InvalidUsernameOrPasswordException("com.authentication.api.service")
+                    InvalidUsernameOrPasswordException("com.authentication.service")
 
             // when
             val exception =
@@ -42,7 +42,7 @@ class AuthenticationServiceTest : IsolatedTestSpec() {
             // then
             verify(exactly = 1) { mockAuthenticationRepository.checkCredentials(credentials) }
             exception.message shouldBe "Invalid username or password"
-            exception.code shouldBe "com.authentication.api.service"
+            exception.code shouldBe "com.authentication.service"
         }
     }
 }
