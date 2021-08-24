@@ -1,25 +1,23 @@
 package com.demo.authentication
 
-import io.kotest.core.spec.style.StringSpec
-import io.kotest.core.test.TestCase
-import io.micronaut.test.extensions.kotest.annotation.MicronautTest
+import com.demo.IntegrationSpec
+import io.micronaut.http.BasicAuth
 import norm.executeCommand
-import javax.inject.Inject
-import javax.sql.DataSource
 
-@MicronautTest
-abstract class AuthenticationIntegrationSpec : StringSpec() {
-    @Inject
-    protected lateinit var dataSource: DataSource
-
-    override fun beforeEach(testCase: TestCase) {
-        super.beforeEach(testCase)
-        clearData()
+open class AuthenticationIntegrationSpec : IntegrationSpec() {
+    override fun clearData() = dataSource.connection.use {
+        it.executeCommand("TRUNCATE TABLE users RESTART IDENTITY")
     }
 
-    protected fun clearData() {
-        dataSource.connection.use { connection ->
-            connection.executeCommand("TRUNCATE users RESTART IDENTITY CASCADE;")
-        }
+    protected fun createUser(basicAuth: BasicAuth) = dataSource.connection.use {
+        it.executeCommand("""
+            | INSERT INTO users (username, password)
+            | VALUES ('${basicAuth.username}', CRYPT('${basicAuth.password}', GEN_SALT('bf')));
+            | """.trimMargin().trimIndent()
+        )
+    }
+
+    protected fun addPgcryptoExtension() = dataSource.connection.use {
+        it.executeCommand("CREATE EXTENSION IF NOT EXISTS pgcrypto;")
     }
 }

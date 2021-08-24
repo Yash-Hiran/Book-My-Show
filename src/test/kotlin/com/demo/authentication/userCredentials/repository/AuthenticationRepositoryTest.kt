@@ -1,45 +1,23 @@
 package com.demo.authentication.userCredentials.repository
 
-import com.demo.authentication.userCredentials.request.CredentialRequest
-import io.kotest.core.spec.style.StringSpec
-import io.kotest.core.test.TestCase
-import io.kotest.core.test.TestResult
+import com.demo.authentication.AuthenticationIntegrationSpec
 import io.kotest.matchers.shouldBe
-import norm.executeCommand
+import io.micronaut.http.BasicAuth
 import io.micronaut.test.extensions.kotest.annotation.MicronautTest
 import javax.inject.Inject
 import javax.sql.DataSource
 
 @MicronautTest
-class AuthenticationRepositoryTest(@Inject private val dataSource: DataSource) : StringSpec() {
+class AuthenticationRepositoryTest(@Inject override var dataSource: DataSource) : AuthenticationIntegrationSpec() {
     private val authenticationRepository = AuthenticationRepository(dataSource)
 
-    override fun afterEach(testCase: TestCase, result: TestResult) {
-        super.afterEach(testCase, result)
-        clearData()
-    }
-
-    private fun clearData() = dataSource.connection.use {
-        it.executeCommand("TRUNCATE TABLE users RESTART IDENTITY;")
-    }
-
-    private fun addPgcrypto() = dataSource.connection.use {
-        it.executeCommand("CREATE EXTENSION pgcrypto;")
-    }
-
-    private fun createUser() = dataSource.connection.use {
-        it.executeCommand("""insert into users (username, password)
-            | values ('mihir', CRYPT('12345', gen_salt('bf')));
-            | """.trimMargin())
-    }
-
     init {
-        addPgcrypto()
+        addPgcryptoExtension()
 
         "should return true for correct credentials" {
             // given
-            val credentials = CredentialRequest("mihir", "12345")
-            createUser()
+            createUser(BasicAuth("mihir", "12345"))
+            val credentials = BasicAuth("mihir", "12345")
 
             // when
             val result = authenticationRepository.checkCredentials(credentials)
@@ -50,8 +28,8 @@ class AuthenticationRepositoryTest(@Inject private val dataSource: DataSource) :
 
         "should return false for incorrect credentials" {
             // given
-            val credentials = CredentialRequest("raj", "xyz")
-            createUser()
+            createUser(BasicAuth("yash", "zcv"))
+            val credentials = BasicAuth("raj", "xyz")
 
             // when
             val result = authenticationRepository.checkCredentials(credentials)
