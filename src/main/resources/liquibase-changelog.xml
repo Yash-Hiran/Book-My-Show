@@ -6,4 +6,6 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
 
     <includeAll path="./changelog" relativeToChangelogFile="true"/>
+    <include file="./changelog/0.0.5-create-user-table.sql"/>
+    <include file="./changelog/0.0.6-add-admin-user.sql"/>
 </databaseChangeLog>
