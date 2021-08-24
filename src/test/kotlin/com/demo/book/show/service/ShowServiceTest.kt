@@ -18,23 +18,6 @@ class ShowServiceTest : StringSpec({
     val movieMock = mockk<MovieRepository>()
     val showService = ShowService(showRepositoryMock, movieMock)
 
-//    "should save a show"{
-//        val showRequest =
-//            CreateShowRequest(1, LocalDate.parse("2021-10-10"), LocalDateTime.parse("2021-10-10T12:30:00"))
-//        val movie = Movie(1, "Bird Box", 30)
-//        val endTime = showService.getEndTime(showRequest, movie)
-//        every { showRepositoryMock.save(showRequest, endTime) }.returns(
-//            Show(
-//                1,
-//                1,
-//                LocalDate.parse("2021-10-10"),
-//                LocalDateTime.parse("2021-10-10T12:30:00"),
-//                LocalDateTime.parse("2021-10-10T13:00:00")
-//            )
-//        )
-//        verify { showRepositoryMock.save(showRequest,endTime) }
-//    }
-
     "should get all saved shows" {
         every { showRepositoryMock.findAll() }.returns(
             listOf(
@@ -67,7 +50,7 @@ class ShowServiceTest : StringSpec({
         showService.getEndTime(showRequest, movie) shouldBe LocalDateTime.parse("2021-10-10T15:30:00.0")
     }
 
-    "should return false for no overlap"{
+    "should return false for no overlap" {
         every { showRepositoryMock.findAll() }.returns(
             listOf(
                 Show(
@@ -87,7 +70,7 @@ class ShowServiceTest : StringSpec({
         isOverlap shouldBe false
     }
 
-    "should return true for overlap"{
+    "should return true for overlap" {
         every { showRepositoryMock.findAll() }.returns(
             listOf(
                 Show(
@@ -100,14 +83,40 @@ class ShowServiceTest : StringSpec({
             )
         )
         val showRequest =
-            CreateShowRequest(1, LocalDate.parse("2021-10-10"), LocalDateTime.parse("2021-10-10T12:30:00"))
+            CreateShowRequest(
+                1,
+                LocalDate.parse("2021-10-10"),
+                LocalDateTime.parse("2021-10-10T12:30:00")
+            )
         val movie = Movie(1, "Bird Box", 30)
         val endTime = showService.getEndTime(showRequest, movie)
         val isOverlap = showService.checkOverlap(showRequest, endTime)
         isOverlap shouldBe true
     }
 
+    "should save a show" {
+        val showRequest =
+            CreateShowRequest(
+                1,
+                LocalDate.parse("2021-10-10"),
+                LocalDateTime.parse("2021-10-10T12:30:00")
+            )
 
+        val movie = Movie(1, "Bird Box", 30)
+        val endTime = showService.getEndTime(showRequest, movie)
+        every { movieMock.getMovieWithId(any()) }.returns(listOf(Movie(1, "AAJA SANAM", 30)))
+        every { showRepositoryMock.save(showRequest, endTime) }.returns(
+            Show(
+                1,
+                1,
+                LocalDate.parse("2021-10-10"),
+                LocalDateTime.parse("2021-10-10T12:30:00"),
+                LocalDateTime.parse("2021-10-10T13:00:00")
+            )
+        )
+        every { showRepositoryMock.findAll() }.returns(listOf())
 
+        showService.save(showRequest)
+        verify(exactly = 1) { showRepositoryMock.save(showRequest, endTime) }
+    }
 })
-
