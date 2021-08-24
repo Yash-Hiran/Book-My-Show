@@ -51,4 +51,14 @@ class MovieServiceTest : StringSpec({
         response shouldBe Movie(1, "Avengers", 5)
         verify(exactly = 1) { movieRepositoryMock.save(movieRequest) }
     }
+
+    "should save movie to repository when duration is 360" {
+        every { movieRepositoryMock.save(any()) }.returns(Movie(1, "Avengers", 360))
+
+        val movieRequest = CreateMovieRequest("Avengers", 360)
+        val response = movieService.save(movieRequest)
+
+        response shouldBe Movie(1, "Avengers", 360)
+        verify(exactly = 1) { movieRepositoryMock.save(movieRequest) }
+    }
 })
