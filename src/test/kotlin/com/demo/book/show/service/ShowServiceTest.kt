@@ -23,8 +23,6 @@ class ShowServiceTest : StringSpec({
     val showService = ShowService(showRepositoryMock, movieRepositoryMock)
     val movieService = MovieService(movieRepositoryMock)
 
-
-
     "should get all saved shows" {
         every { showRepositoryMock.findAll() }.returns(
             listOf(
@@ -130,10 +128,11 @@ class ShowServiceTest : StringSpec({
 
     "should throw an exception if show is overlapping" {
 
-        val createShowRequest = CreateShowRequest(1,LocalDate.parse("2021-10-10"),LocalDateTime.parse("2021-10-10T12:30:00"))
-        every { movieRepositoryMock.getMovieWithId(any()) }.returns(listOf(Movie(1,"harry potter",30)))
+        val createShowRequest =
+            CreateShowRequest(1, LocalDate.parse("2021-10-10"), LocalDateTime.parse("2021-10-10T12:30:00"))
+        every { movieRepositoryMock.getMovieWithId(any()) }.returns(listOf(Movie(1, "harry potter", 30)))
         val movie = movieService.getMovieWithId(createShowRequest.movieId)
-        val endTime = showService.getEndTime(createShowRequest,movie)
+        val endTime = showService.getEndTime(createShowRequest, movie)
 
         every { showRepositoryMock.save(createShowRequest, endTime) }.returns(
             Show(
@@ -156,11 +155,19 @@ class ShowServiceTest : StringSpec({
                 )
             )
         )
-        val createSecondShowRequest = CreateShowRequest(1,LocalDate.parse("2021-10-10"),LocalDateTime.parse("2021-10-10T12:30:00"))
+        val createSecondShowRequest =
+            CreateShowRequest(1, LocalDate.parse("2021-10-10"), LocalDateTime.parse("2021-10-10T12:30:00"))
         val exception = shouldThrow<InvalidShowDetailsException> { showService.save(createSecondShowRequest) }
         exception.message shouldBe "Already have a show scheduled during that time"
     }
 
+    "should throw an exception if movie does not exist and we try to save a show for that movie" {
+        every { movieRepositoryMock.getMovieWithId(any()) }.returns(listOf())
+        val createShowRequest =
+            CreateShowRequest(1, LocalDate.parse("2021-10-10"), LocalDateTime.parse("2021-10-10T12:30:00"))
+        val exception = shouldThrow<InvalidMovieDetailsException> { showService.save(createShowRequest) }
+        exception.message shouldBe "Movie Id does not exist"
+    }
 
 
 })
