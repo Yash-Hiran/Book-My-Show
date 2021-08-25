@@ -18,7 +18,11 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
 
         val movieService = MovieService(movieRepository)
         val movie = movieService.getMovieWithId(showRequest.movieId)
+        if (validateShowStartTime(showRequest.startTime)){
+            throw InvalidShowDetailsException("Can not schedule a show for past show time")
+        }
         val endTimeInTimeStamp = getEndTime(showRequest, movie)
+
         if (checkOverlap(showRequest, endTimeInTimeStamp))
             throw InvalidShowDetailsException("Already have a show scheduled during that time")
         return showRepository.save(showRequest, endTimeInTimeStamp)
@@ -44,5 +48,9 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
 
     fun allShows(): List<Show> {
         return showRepository.findAll()
+    }
+
+    private fun validateShowStartTime(showStartTime:LocalDateTime): Boolean {
+        return showStartTime < LocalDateTime.now()
     }
 }
