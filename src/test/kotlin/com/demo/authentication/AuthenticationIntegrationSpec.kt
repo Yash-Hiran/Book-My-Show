@@ -1,7 +1,7 @@
 package com.demo.authentication
 
 import com.demo.IntegrationSpec
-import io.micronaut.http.BasicAuth
+import com.demo.authentication.userCredentials.UserCredentialsRequest
 import norm.executeCommand
 
 open class AuthenticationIntegrationSpec : IntegrationSpec() {
@@ -9,10 +9,10 @@ open class AuthenticationIntegrationSpec : IntegrationSpec() {
         it.executeCommand("TRUNCATE TABLE users RESTART IDENTITY")
     }
 
-    protected fun createUser(basicAuth: BasicAuth) = dataSource.connection.use {
+    protected fun createUser(userCredentialsRequest: UserCredentialsRequest) = dataSource.connection.use {
         it.executeCommand("""
             | INSERT INTO users (username, password)
-            | VALUES ('${basicAuth.username}', CRYPT('${basicAuth.password}', GEN_SALT('bf')));
+            | VALUES ('${userCredentialsRequest.username}', CRYPT('${userCredentialsRequest.password}', GEN_SALT('bf')));
             | """.trimMargin().trimIndent()
         )
     }
