@@ -53,19 +53,62 @@ class ShowRepository(@Inject private val datasource: DataSource) {
         )
     }
 
+    fun findAllByOrder(): Map<String,List<Show>> = mapOf(Pair("Past:",findAllPastShows()),
+        Pair("Ongoing:",findAllOngoingShows()), Pair("Upcoming:",findAllUpcomingShows())
+    )
+
+
     fun findAllPastShows(): List<Show> = datasource.connection.use { connection ->
         GetAllShowsQuery().query(
             connection,
             GetAllShowsParams()
         )
-    }.sortedByDescending{it.endTime.toLocalDateTime()}.filter { it.startTime.toLocalDateTime() < LocalDateTime.now() }.map {
-        Show(
-            it.id,
-            it.movieId,
-            it.showDate.toLocalDate(),
-            it.startTime.toLocalDateTime(),
-            it.endTime.toLocalDateTime()
+    }.sortedByDescending { it.endTime.toLocalDateTime() }
+        .filter { it.endTime.toLocalDateTime() < LocalDateTime.now() }
+        .map {
+            Show(
+                it.id,
+                it.movieId,
+                it.showDate.toLocalDate(),
+                it.startTime.toLocalDateTime(),
+                it.endTime.toLocalDateTime()
 
+            )
+        }
+
+    fun findAllUpcomingShows(): List<Show> = datasource.connection.use { connection ->
+        GetAllShowsQuery().query(
+            connection,
+            GetAllShowsParams()
         )
-    }
+    }.sortedBy { it.startTime.toLocalDateTime() }
+        .filter { it.startTime.toLocalDateTime() > LocalDateTime.now() }
+        .map {
+            Show(
+                it.id,
+                it.movieId,
+                it.showDate.toLocalDate(),
+                it.startTime.toLocalDateTime(),
+                it.endTime.toLocalDateTime()
+
+            )
+        }
+
+    fun findAllOngoingShows(): List<Show> = datasource.connection.use { connection ->
+        GetAllShowsQuery().query(
+            connection,
+            GetAllShowsParams()
+        )
+    }.sortedBy { it.endTime.toLocalDateTime() }
+        .filter { it.startTime.toLocalDateTime() < LocalDateTime.now() && it.endTime.toLocalDateTime() > LocalDateTime.now()}
+        .map {
+            Show(
+                it.id,
+                it.movieId,
+                it.showDate.toLocalDate(),
+                it.startTime.toLocalDateTime(),
+                it.endTime.toLocalDateTime()
+
+            )
+        }
 }

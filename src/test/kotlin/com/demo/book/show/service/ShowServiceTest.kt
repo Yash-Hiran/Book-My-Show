@@ -40,6 +40,7 @@ class ShowServiceTest : StringSpec({
         every { showRepositoryMock.findAll() }.returns(listOf())
         showService.allShows() shouldBe listOf()
     }
+
     "should return correct end time" {
         val showRequest =
             CreateShowRequest(
@@ -66,7 +67,7 @@ class ShowServiceTest : StringSpec({
             CreateShowRequest(1, LocalDate.parse("2021-10-10"), LocalDateTime.parse("2021-10-10T15:00:00"))
         val movie = Movie(1, "Bird Box", 30)
         val endTime = showService.getEndTime(showRequest, movie)
-        val isOverlap = showService.checkOverlap(showRequest, endTime)
+        val isOverlap = showService.checkOverlapOfShows(showRequest.startTime, endTime)
         isOverlap shouldBe false
     }
 
@@ -90,33 +91,38 @@ class ShowServiceTest : StringSpec({
             )
         val movie = Movie(1, "Bird Box", 30)
         val endTime = showService.getEndTime(showRequest, movie)
-        val isOverlap = showService.checkOverlap(showRequest, endTime)
+        val isOverlap = showService.checkOverlapOfShows(showRequest.startTime, endTime)
         isOverlap shouldBe true
     }
 
-    "should save a show" {
-        val showRequest =
-            CreateShowRequest(
-                1,
-                LocalDate.parse("2021-10-10"),
-                LocalDateTime.parse("2021-10-10T12:30:00")
-            )
+    "should get List with past shows" {
+        every { showRepositoryMock.findAllPastShows() }.returns(listOf(Show(
+            1,
+            1,
+            LocalDate.parse("2021-06-09"),
+            LocalDateTime.parse("2021-06-09T12:00:00"),
+            LocalDateTime.parse("2021-06-09T15:00:00")
+        ),Show(
+            1,
+            1,
+            LocalDate.parse("2021-06-08"),
+            LocalDateTime.parse("2021-06-08T12:00:00"),
+            LocalDateTime.parse("2021-06-08T15:00:00")
+        )))
 
-        val movie = Movie(1, "Bird Box", 30)
-        val endTime = showService.getEndTime(showRequest, movie)
-        every { movieMock.getMovieWithId(any()) }.returns(listOf(Movie(1, "AAJA SANAM", 30)))
-        every { showRepositoryMock.save(showRequest, endTime) }.returns(
-            Show(
-                1,
-                1,
-                LocalDate.parse("2021-10-10"),
-                LocalDateTime.parse("2021-10-10T12:30:00"),
-                LocalDateTime.parse("2021-10-10T13:00:00")
-            )
-        )
-        every { showRepositoryMock.findAll() }.returns(listOf())
-
-        showService.save(showRequest)
-        verify(exactly = 1) { showRepositoryMock.save(showRequest, endTime) }
+        showService.allPastShows() shouldBe listOf(Show(
+            1,
+            1,
+            LocalDate.parse("2021-06-09"),
+            LocalDateTime.parse("2021-06-09T12:00:00"),
+            LocalDateTime.parse("2021-06-09T15:00:00")
+        ),Show(
+            1,
+            1,
+            LocalDate.parse("2021-06-08"),
+            LocalDateTime.parse("2021-06-08T12:00:00"),
+            LocalDateTime.parse("2021-06-08T15:00:00")
+        ))
     }
+
 })

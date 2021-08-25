@@ -1,4 +1,4 @@
-package com.demo.book.api
+package com.demo.book.show.api
 
 import com.demo.book.show.service.ShowService
 import com.demo.book.show.request.CreateShowRequest
@@ -17,12 +17,15 @@ class ShowApi(@Inject val showService: ShowService) {
     fun allShows(): HttpResponse<List<Show>> {
         return HttpResponse.ok(showService.allShows())
     }
-    @Get("/shows/past")
-    fun allPastShows(): HttpResponse<List<Show>> {
-        return HttpResponse.ok(showService.allPastShows())
+
+    @Get("/showss")
+    fun allShowsByOrder(): HttpResponse<Map<String,List<Show>>> {
+        return HttpResponse.ok(showService.allShowsByOrder())
     }
+
     @Post("/shows")
     fun saveShow(@Body showRequest: CreateShowRequest): HttpResponse<Int> {
         return HttpResponse.ok(showService.save(showRequest).id)
     }
 }
+

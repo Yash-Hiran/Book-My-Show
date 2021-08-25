@@ -18,10 +18,10 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
 
         val movieService = MovieService(movieRepository)
         val movie = movieService.getMovieWithId(showRequest.movieId)
-        val endTimeInTimeStamp = getEndTime(showRequest, movie)
-        if (checkOverlap(showRequest, endTimeInTimeStamp))
+        val showEndtime = getEndTime(showRequest, movie)
+        if (checkOverlapOfShows(showRequest.startTime, showEndtime))
             throw InvalidMovieDetailsException("Overlap in show timings found")
-        return showRepository.save(showRequest, endTimeInTimeStamp)
+        return showRepository.save(showRequest, showEndtime)
     }
 
     fun getEndTime(
@@ -31,14 +31,14 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
         return showRequest.startTime.plusMinutes(movie.duration.toLong())
     }
 
-    fun checkOverlap(
-        showRequest: CreateShowRequest,
-        endTimeInTimeStamp: LocalDateTime
+    fun checkOverlapOfShows(
+        startTime: LocalDateTime,
+        endTime: LocalDateTime
     ): Boolean {
         val showList = allShows()
         return showList.any {
-            showRequest.startTime in it.startTime..it.endTime ||
-                    endTimeInTimeStamp in it.startTime..it.endTime
+            startTime in it.startTime..it.endTime ||
+                    endTime in it.startTime..it.endTime
         }
     }
 
@@ -46,7 +46,8 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
         return showRepository.findAll()
     }
 
-    fun allPastShows(): List<Show> {
-        return showRepository.findAllPastShows()
+    fun allShowsByOrder(): Map<String,List<Show>> {
+        return showRepository.findAllByOrder()
     }
+
 }
