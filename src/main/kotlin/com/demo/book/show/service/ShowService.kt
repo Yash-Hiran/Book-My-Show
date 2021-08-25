@@ -1,7 +1,7 @@
 package com.demo.book.show.service
 
 import com.demo.book.movie.entity.Movie
-import com.demo.book.movie.exception.InvalidMovieDetailsException
+import com.demo.book.movie.exception.InvalidShowDetailsException
 import com.demo.book.movie.repository.MovieRepository
 import com.demo.book.show.repository.ShowRepository
 import com.demo.book.movie.service.MovieService
@@ -20,7 +20,7 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
         val movie = movieService.getMovieWithId(showRequest.movieId)
         val endTimeInTimeStamp = getEndTime(showRequest, movie)
         if (checkOverlap(showRequest, endTimeInTimeStamp))
-            throw InvalidMovieDetailsException("Overlap in show timings found")
+            throw InvalidShowDetailsException("Overlap in show timings found")
         return showRepository.save(showRequest, endTimeInTimeStamp)
     }
 
