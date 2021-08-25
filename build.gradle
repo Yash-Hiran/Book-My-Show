@@ -41,6 +41,7 @@ dependencies {
     implementation 'com.medly:ktee:1.0.0'
     implementation("io.micronaut.security:micronaut-security-annotations")
     implementation("io.micronaut.security:micronaut-security-jwt")
+
     runtimeOnly "ch.qos.logback:logback-classic"
     runtimeOnly "org.postgresql:postgresql"
     runtimeOnly "com.fasterxml.jackson.module:jackson-module-kotlin"
