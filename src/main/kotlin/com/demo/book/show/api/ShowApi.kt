@@ -8,14 +8,17 @@ import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Post
+import io.micronaut.security.annotation.Secured
+import io.micronaut.security.rules.SecurityRule
 import javax.inject.Inject
 
 @Controller
+@Secured(SecurityRule.IS_AUTHENTICATED)
 class ShowApi(@Inject val showService: ShowService) {
 
     @Get("/shows")
     fun allShows(): HttpResponse<List<Show>> {
-        return HttpResponse.ok(showService.allShows())
+            return HttpResponse.ok(showService.allShows())
     }
 
     @Post("/shows")
