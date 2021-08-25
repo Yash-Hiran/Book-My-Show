@@ -1,7 +1,6 @@
 package com.demo.book.show.exceptionhandler
 
-import com.demo.book.movie.exception.InvalidMovieDetailsException
-import com.demo.book.movie.exception.InvalidShowDetailsException
+import com.demo.book.show.exception.InvalidShowDetailsException
 import io.micronaut.context.annotation.Requirements
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest

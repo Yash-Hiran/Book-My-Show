@@ -1,4 +1,4 @@
-package com.demo.book.movie.exception
+package com.demo.book.show.exception
 
 import java.lang.RuntimeException
 
