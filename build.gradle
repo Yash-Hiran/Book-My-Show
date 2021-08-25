@@ -50,8 +50,6 @@ dependencies {
     testImplementation "org.testcontainers:postgresql"
     testImplementation "org.testcontainers:testcontainers"
     testImplementation "com.medly.norm:runtime:$normVersion"
-    testImplementation "com.fasterxml.jackson.module:jackson-module-kotlin"
-
 }
 
 
