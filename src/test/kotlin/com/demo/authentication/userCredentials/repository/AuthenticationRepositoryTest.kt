@@ -1,8 +1,8 @@
 package com.demo.authentication.userCredentials.repository
 
 import com.demo.authentication.AuthenticationIntegrationSpec
+import com.demo.authentication.userCredentials.UserCredentialsRequest
 import io.kotest.matchers.shouldBe
-import io.micronaut.http.BasicAuth
 import io.micronaut.test.extensions.kotest.annotation.MicronautTest
 import javax.inject.Inject
 import javax.sql.DataSource
@@ -16,8 +16,8 @@ class AuthenticationRepositoryTest(@Inject override var dataSource: DataSource) 
 
         "should return true for correct credentials" {
             // given
-            createUser(BasicAuth("mihir", "12345"))
-            val credentials = BasicAuth("mihir", "12345")
+            createUser(UserCredentialsRequest("mihir", "12345"))
+            val credentials = UserCredentialsRequest("mihir", "12345")
 
             // when
             val result = authenticationRepository.checkCredentials(credentials)
@@ -28,8 +28,8 @@ class AuthenticationRepositoryTest(@Inject override var dataSource: DataSource) 
 
         "should return false for incorrect credentials" {
             // given
-            createUser(BasicAuth("yash", "zcv"))
-            val credentials = BasicAuth("raj", "xyz")
+            createUser(UserCredentialsRequest("yash", "zcv"))
+            val credentials = UserCredentialsRequest("raj", "xyz")
 
             // when
             val result = authenticationRepository.checkCredentials(credentials)
