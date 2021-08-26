@@ -33,7 +33,6 @@ class ShowRepository(@Inject private val datasource: DataSource) {
             it.showDate.toLocalDate(),
             it.startTime.toLocalDateTime(),
             it.endTime.toLocalDateTime()
-
         )
     }.first()
 
@@ -49,16 +48,16 @@ class ShowRepository(@Inject private val datasource: DataSource) {
             it.showDate.toLocalDate(),
             it.startTime.toLocalDateTime(),
             it.endTime.toLocalDateTime()
-
         )
     }
 
     fun findAllByOrder(): Map<String, List<Show>> = mapOf(
         Pair("Past:", findAllPastShows()),
-        Pair("Ongoing:", findAllOngoingShows()), Pair("Upcoming:", findAllUpcomingShows())
+        Pair("Ongoing:", findAllOngoingShows()),
+        Pair("Upcoming:", findAllUpcomingShows())
     )
 
-    fun findAllPastShows(): List<Show> = datasource.connection.use { connection ->
+    private fun findAllPastShows(): List<Show> = datasource.connection.use { connection ->
         GetAllShowsQuery().query(
             connection,
             GetAllShowsParams()
@@ -76,7 +75,7 @@ class ShowRepository(@Inject private val datasource: DataSource) {
             )
         }
 
-    fun findAllUpcomingShows(): List<Show> = datasource.connection.use { connection ->
+    private fun findAllUpcomingShows(): List<Show> = datasource.connection.use { connection ->
         GetAllShowsQuery().query(
             connection,
             GetAllShowsParams()
@@ -94,7 +93,7 @@ class ShowRepository(@Inject private val datasource: DataSource) {
             )
         }
 
-    fun findAllOngoingShows(): List<Show> = datasource.connection.use { connection ->
+    private fun findAllOngoingShows(): List<Show> = datasource.connection.use { connection ->
         GetAllShowsQuery().query(
             connection,
             GetAllShowsParams()

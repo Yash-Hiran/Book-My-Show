@@ -12,15 +12,13 @@ class MovieService(@Inject val movieRepository: MovieRepository) {
     fun save(movieRequest: CreateMovieRequest): Movie {
         if (movieRequest.isNotWithinTimeLimits())
             throw InvalidMovieDetailsException(
-                message = "Movie Duration is not within time limit. " +
-                        "It must be greater than 5 and less than 360"
+                message = "Movie Duration must be between 5 minutes and" +
+                        " 360 minutes(both included)"
             )
         return movieRepository.save(movieRequest)
     }
 
-    fun allMovies(): List<Movie> {
-        return movieRepository.findAll()
-    }
+    fun allMovies() = movieRepository.findAll()
 
     fun getMovieWithId(id: Int): Movie {
         val movieList = movieRepository.getMovieWithId(id)

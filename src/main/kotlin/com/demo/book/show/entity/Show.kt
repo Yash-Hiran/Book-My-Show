@@ -7,6 +7,7 @@ import java.time.LocalDateTime
 data class Show(
     val id: Int,
     val movieId: Int,
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     val showDate: LocalDate,
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")

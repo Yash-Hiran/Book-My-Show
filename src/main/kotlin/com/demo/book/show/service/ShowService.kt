@@ -1,7 +1,7 @@
 package com.demo.book.show.service
 
 import com.demo.book.movie.entity.Movie
-import com.demo.book.movie.exception.InvalidMovieDetailsException
+import com.demo.book.show.exception.InvalidShowDetailsException
 import com.demo.book.movie.repository.MovieRepository
 import com.demo.book.show.repository.ShowRepository
 import com.demo.book.movie.service.MovieService
@@ -18,10 +18,18 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
 
         val movieService = MovieService(movieRepository)
         val movie = movieService.getMovieWithId(showRequest.movieId)
-        val showEndtime = getEndTime(showRequest, movie)
-        if (checkOverlapOfShows(showRequest.startTime, showEndtime))
-            throw InvalidMovieDetailsException("Overlap in show timings found")
-        return showRepository.save(showRequest, showEndtime)
+
+        if (validateShowStartTime(showRequest.startTime))
+            throw InvalidShowDetailsException("Can not schedule a show for past show time")
+
+        if (!validateShowDate(showRequest))
+            throw InvalidShowDetailsException("Show date and start time date does not match")
+
+        val showEndTime = getEndTime(showRequest, movie)
+
+        if (checkOverlapOfShows(showRequest.startTime, showEndTime))
+            throw InvalidShowDetailsException("Already have a show scheduled during that time")
+        return showRepository.save(showRequest, showEndTime)
     }
 
     fun getEndTime(
@@ -46,7 +54,12 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
         return showRepository.findAll()
     }
 
-    fun allShowsByOrder(): Map<String, List<Show>> {
-        return showRepository.findAllByOrder()
-    }
+    fun allShowsByOrder() = showRepository.findAllByOrder()
+
+    private fun validateShowDate(showRequest: CreateShowRequest) =
+        showRequest.showDate == showRequest.startTime.toLocalDate()
+
+
+    private fun validateShowStartTime(showStartTime: LocalDateTime) =
+        showStartTime < LocalDateTime.now()
 }
