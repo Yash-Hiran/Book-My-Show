@@ -36,7 +36,7 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
         return showRequest.startTime.plusMinutes(movie.duration.toLong())
     }
 
-    fun checkOverlap(
+    private fun checkOverlap(
         showRequest: CreateShowRequest,
         endTimeInTimeStamp: LocalDateTime
     ): Boolean {

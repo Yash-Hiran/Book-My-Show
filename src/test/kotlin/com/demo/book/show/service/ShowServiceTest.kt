@@ -46,60 +46,6 @@ class ShowServiceTest : StringSpec({
         showService.allShows() shouldBe listOf()
     }
 
-    "should return correct end time" {
-        val showRequest =
-            CreateShowRequest(
-                1, LocalDate.parse("2021-10-10"),
-                LocalDateTime.parse("2021-10-10T15:00:00")
-            )
-        val movie = Movie(1, "Bird Box", 30)
-        showService.getEndTime(showRequest, movie) shouldBe LocalDateTime.parse("2021-10-10T15:30:00.0")
-    }
-
-    "should return false for no overlap" {
-        every { showRepositoryMock.findAll() }.returns(
-            listOf(
-                Show(
-                    1,
-                    1,
-                    LocalDate.parse("2021-10-10"),
-                    LocalDateTime.parse("2021-10-10T12:00:00"),
-                    LocalDateTime.parse("2021-10-10T12:50:00")
-                )
-            )
-        )
-        val showRequest =
-            CreateShowRequest(1, LocalDate.parse("2021-10-10"), LocalDateTime.parse("2021-10-10T15:00:00"))
-        val movie = Movie(1, "Bird Box", 30)
-        val endTime = showService.getEndTime(showRequest, movie)
-        val isOverlap = showService.checkOverlap(showRequest, endTime)
-        isOverlap shouldBe false
-    }
-
-    "should return true for overlap" {
-        every { showRepositoryMock.findAll() }.returns(
-            listOf(
-                Show(
-                    1,
-                    1,
-                    LocalDate.parse("2021-10-10"),
-                    LocalDateTime.parse("2021-10-10T12:00:00"),
-                    LocalDateTime.parse("2021-10-10T12:50:00")
-                )
-            )
-        )
-        val showRequest =
-            CreateShowRequest(
-                1,
-                LocalDate.parse("2021-10-10"),
-                LocalDateTime.parse("2021-10-10T12:30:00")
-            )
-        val movie = Movie(1, "Bird Box", 30)
-        val endTime = showService.getEndTime(showRequest, movie)
-        val isOverlap = showService.checkOverlap(showRequest, endTime)
-        isOverlap shouldBe true
-    }
-
     "should save a show" {
         val showRequest =
             CreateShowRequest(
@@ -176,6 +122,7 @@ class ShowServiceTest : StringSpec({
         val exception = shouldThrow<InvalidShowDetailsException> { showService.save(createShowRequest) }
         exception.message shouldBe "Can not schedule a show for past show time"
     }
+
     "should throw an exception if show start date and start time does not match" {
         every { movieRepositoryMock.getMovieWithId(any()) }.returns(listOf(Movie(1, "harry potter", 30)))
         val createShowRequest =
