@@ -64,7 +64,7 @@ class MovieApiTest(override var dataSource: DataSource) : BookingIntegrationSpec
             jsonString(savedMovies) shouldBe "[ ]"
         }
 
-        "should respond with bad request when saving a movie with incorrect credentials" {
+        "should respond with UNAUTHORIZED when saving a movie with incorrect credentials" {
             // When
             val exception = shouldThrow<HttpClientResponseException>
             { createNewMovie(newMovieRequest(100), nonAdminCredentials) }
@@ -74,7 +74,7 @@ class MovieApiTest(override var dataSource: DataSource) : BookingIntegrationSpec
             exception.status shouldBe HttpStatus.UNAUTHORIZED
         }
 
-        "should respond with bad request when getting movie with incorrect credentials" {
+        "should respond with UNAUTHORIZED when getting movie with incorrect credentials" {
             // When
             val exception = shouldThrow<HttpClientResponseException> { getAllMoviesWithAuth(nonAdminCredentials) }
 
