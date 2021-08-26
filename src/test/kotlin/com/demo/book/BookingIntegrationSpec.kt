@@ -1,5 +1,6 @@
 package com.demo.book
 
+import com.demo.IntegrationSpec
 import com.demo.authentication.userCredentials.request.UserCredentialsRequest
 import com.demo.book.movie.entity.Movie
 import com.demo.book.movie.request.CreateMovieRequest
@@ -12,7 +13,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import io.kotest.core.spec.style.StringSpec
 import io.kotest.core.test.TestCase
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.client.HttpClient
@@ -26,14 +26,11 @@ import javax.inject.Inject
 import javax.sql.DataSource
 
 @MicronautTest
-abstract class BaseIntegrationSpec : StringSpec() {
+abstract class BookingIntegrationSpec : IntegrationSpec() {
 
     @Inject
     @field:Client("/api")
     protected lateinit var httpClient: HttpClient
-
-    @Inject
-    protected open lateinit var dataSource: DataSource
 
     protected val jsonMapper: ObjectMapper = jacksonObjectMapper().also {
         it.enable(SerializationFeature.INDENT_OUTPUT)
@@ -47,15 +44,17 @@ abstract class BaseIntegrationSpec : StringSpec() {
         clearData()
     }
 
-    protected abstract fun clearData()
-
     protected fun jsonString(movie: Any?): String = jsonMapper.writeValueAsString(movie)
 
-    protected fun createNewShowWithBasicAuth(show: CreateShowRequest, userCredentialsRequest: UserCredentialsRequest): HttpResponse<String> = httpClient.postWithBasicAuth(
-        url = "/shows",
-        body = jsonString(show),
-        userCredentialsRequest = userCredentialsRequest
-    )
+    protected fun createNewShowWithBasicAuth(
+        show: CreateShowRequest,
+        userCredentialsRequest: UserCredentialsRequest
+    ): HttpResponse<String> =
+        httpClient.postWithBasicAuth(
+            url = "/shows",
+            body = jsonString(show),
+            userCredentialsRequest = userCredentialsRequest
+        )
 
     protected fun getAllMoviesWithAuth(userCredentialsRequest: UserCredentialsRequest): HttpResponse<List<Movie>> =
         httpClient.getWithBasicAuth<List<Movie>>(
@@ -72,7 +71,10 @@ abstract class BaseIntegrationSpec : StringSpec() {
         LocalDateTime.parse(startTime)
     )
 
-    protected fun createNewMovie(avengersMovie: CreateMovieRequest, userCredentialsRequest: UserCredentialsRequest): HttpResponse<String> =
+    protected fun createNewMovie(
+        avengersMovie: CreateMovieRequest,
+        userCredentialsRequest: UserCredentialsRequest
+    ): HttpResponse<String> =
         httpClient.postWithBasicAuth(
             url = "/movies",
             body = jsonString(avengersMovie),
@@ -86,7 +88,8 @@ abstract class BaseIntegrationSpec : StringSpec() {
         )
 
     protected fun createUser(userCredentialsRequest: UserCredentialsRequest) = dataSource.connection.use {
-        it.executeCommand("""
+        it.executeCommand(
+            """
             | INSERT INTO users (username, password)
             | VALUES ('${userCredentialsRequest.username}', CRYPT('${userCredentialsRequest.password}', GEN_SALT('bf')));
             | """.trimMargin().trimIndent()
