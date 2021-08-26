@@ -18,8 +18,8 @@ class ShowApiTest : BaseIntegrationSpec() {
 
         "should get all saved shows" {
             // When
-            val startDate = "2021-08-25"
-            val startTime = "2021-08-25T15:50:36.0680763"
+            val startDate = "2030-08-25"
+            val startTime = "2030-08-25T15:50:36.0680763"
 
             createNewMovie(newMovieRequest(100)).body.get()
             createNewShow(newShowRequest(startDate, startTime))
@@ -33,9 +33,9 @@ class ShowApiTest : BaseIntegrationSpec() {
                 |{
                 |  "id" : 1,
                 |  "movieId" : 1,
-                |  "showDate" : "2021-08-25",
-                |  "startTime" : "2021-08-25 03:50:36",
-                |  "endTime" : "2021-08-25 05:30:36"
+                |  "showDate" : "2030-08-25",
+                |  "startTime" : "2030-08-25 15:50:36",
+                |  "endTime" : "2030-08-25 17:30:36"
                 |}
             """.trimMargin().trimIndent()
         }
@@ -54,8 +54,8 @@ class ShowApiTest : BaseIntegrationSpec() {
 
         "should add show " {
             // When
-            val startDate = "2021-08-26"
-            val startTime = "2021-08-26T15:50:36.0680763"
+            val startDate = "2031-08-26"
+            val startTime = "2031-08-26T15:50:36.0680763"
             createNewMovie(newMovieRequest(100)).body.get()
             val response = createNewShow(newShowRequest(startDate, startTime))
 

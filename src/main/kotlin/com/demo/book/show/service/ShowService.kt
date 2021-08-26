@@ -18,9 +18,10 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
 
         val movieService = MovieService(movieRepository)
         val movie = movieService.getMovieWithId(showRequest.movieId)
-        if (validateShowStartTime(showRequest.startTime)){
+        if (validateShowStartTime(showRequest.startTime))
             throw InvalidShowDetailsException("Can not schedule a show for past show time")
-        }
+        if (!validateShowDate(showRequest))
+            throw InvalidShowDetailsException("Show date and start time date does not match")
         val endTimeInTimeStamp = getEndTime(showRequest, movie)
 
         if (checkOverlap(showRequest, endTimeInTimeStamp))
@@ -50,7 +51,11 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
         return showRepository.findAll()
     }
 
-    private fun validateShowStartTime(showStartTime:LocalDateTime): Boolean {
+    private fun validateShowDate(showRequest: CreateShowRequest): Boolean {
+        return showRequest.showDate == showRequest.startTime.toLocalDate()
+    }
+
+    private fun validateShowStartTime(showStartTime: LocalDateTime): Boolean {
         return showStartTime < LocalDateTime.now()
     }
 }
