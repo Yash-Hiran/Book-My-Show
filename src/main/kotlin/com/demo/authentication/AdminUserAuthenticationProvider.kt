@@ -1,6 +1,6 @@
 package com.demo.authentication
 
-import com.demo.authentication.userCredentials.UserCredentialsRequest
+import com.demo.authentication.userCredentials.request.UserCredentialsRequest
 import com.demo.authentication.userCredentials.service.AuthenticationService
 import io.micronaut.http.HttpRequest
 import io.micronaut.security.authentication.*
@@ -14,16 +14,13 @@ class AdminUserAuthenticationProvider(@Inject private val authenticationService:
     AuthenticationProvider {
     override fun authenticate(httpRequest: HttpRequest<*>?, authenticationRequest: AuthenticationRequest<*, *>?):
             Publisher<AuthenticationResponse> {
-        if (authenticationRequest != null && authenticationRequest.identity != null &&
-            authenticationRequest.secret != null
-        ) {
+        if (authenticationRequest != null) {
             val userCredentialsRequest = UserCredentialsRequest(
-                    authenticationRequest.identity as String,
-                    authenticationRequest.secret as String
-                )
-            if (authenticationService.checkCredentials(userCredentialsRequest)) {
-                return Flowable.just(UserDetails(authenticationRequest.identity as String, listOf()))
-            }
+                authenticationRequest.identity as String,
+                authenticationRequest.secret as String
+            )
+            if (authenticationService.checkCredentials(userCredentialsRequest))
+                return Flowable.just(UserDetails(userCredentialsRequest.username, listOf()))
         }
         return Flowable.just(AuthenticationFailed())
     }
