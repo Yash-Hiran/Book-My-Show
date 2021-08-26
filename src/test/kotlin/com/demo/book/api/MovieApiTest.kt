@@ -1,14 +1,16 @@
 package com.demo.book.api
 
-import com.demo.authentication.userCredentials.UserCredentialsRequest
+import com.demo.authentication.userCredentials.request.UserCredentialsRequest
 import com.demo.book.BaseIntegrationSpec
 import com.demo.book.movie.entity.Movie
 import com.demo.book.movie.request.CreateMovieRequest
 import com.demo.utils.getWithBasicAuth
 import com.demo.utils.postWithBasicAuth
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.test.TestCase
 import io.kotest.matchers.shouldBe
 import io.micronaut.http.HttpStatus
+import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.test.extensions.kotest.annotation.MicronautTest
 import norm.executeCommand
 import javax.sql.DataSource
@@ -79,23 +81,25 @@ class MovieApiTest(override var dataSource: DataSource) : BaseIntegrationSpec() 
             // Then
             val savedMovies = getAllMoviesWithAuth(adminCredentials).body.get()
             savedMovies.size shouldBe 0
-            jsonString(savedMovies[0]) shouldBe "[ ]"
+            jsonString(savedMovies) shouldBe "[ ]"
         }
 
         "should respond with bad request when saving a movie with incorrect credentials" {
             // When
-            val response = createNewMovie(newMovieRequest(100), nonAdminCredentials)
+            val exception = shouldThrow<HttpClientResponseException> { createNewMovie(newMovieRequest(100), nonAdminCredentials) }
 
             // Then
-            response.status shouldBe HttpStatus.BAD_REQUEST
+            exception.message shouldBe "Unauthorized"
+            exception.status shouldBe HttpStatus.UNAUTHORIZED
         }
 
         "should respond with bad request when getting movie with incorrect credentials" {
             // When
-            val response = getAllMoviesWithAuth(nonAdminCredentials)
+            val exception = shouldThrow<HttpClientResponseException> { getAllMoviesWithAuth(nonAdminCredentials) }
 
             // Then
-            response.status shouldBe HttpStatus.BAD_REQUEST
+            exception.message shouldBe "Unauthorized"
+            exception.status shouldBe HttpStatus.UNAUTHORIZED
         }
     }
 
