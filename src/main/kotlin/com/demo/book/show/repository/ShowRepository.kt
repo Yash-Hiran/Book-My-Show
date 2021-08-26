@@ -33,7 +33,6 @@ class ShowRepository(@Inject private val datasource: DataSource) {
             it.showDate.toLocalDate(),
             it.startTime.toLocalDateTime(),
             it.endTime.toLocalDateTime()
-
         )
     }.first()
 
@@ -49,7 +48,6 @@ class ShowRepository(@Inject private val datasource: DataSource) {
             it.showDate.toLocalDate(),
             it.startTime.toLocalDateTime(),
             it.endTime.toLocalDateTime()
-
         )
     }
 }

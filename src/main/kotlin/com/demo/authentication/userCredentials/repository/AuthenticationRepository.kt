@@ -19,7 +19,6 @@ class AuthenticationRepository(@Inject private val dataSource: DataSource) {
                         userCredentialsRequest.username,
                         userCredentialsRequest.password
                     )
-                )
-                .isNotEmpty()
+                ).isNotEmpty()
         }
 }
