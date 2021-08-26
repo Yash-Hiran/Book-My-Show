@@ -1,7 +1,7 @@
 package com.demo.authentication.userCredentials.repository
 
 import com.demo.authentication.AuthenticationIntegrationSpec
-import com.demo.authentication.userCredentials.UserCredentialsRequest
+import com.demo.authentication.userCredentials.request.UserCredentialsRequest
 import io.kotest.matchers.shouldBe
 import io.micronaut.test.extensions.kotest.annotation.MicronautTest
 import javax.inject.Inject

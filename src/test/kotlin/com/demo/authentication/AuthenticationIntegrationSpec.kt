@@ -1,12 +1,12 @@
 package com.demo.authentication
 
 import com.demo.IntegrationSpec
-import com.demo.authentication.userCredentials.UserCredentialsRequest
+import com.demo.authentication.userCredentials.request.UserCredentialsRequest
 import norm.executeCommand
 
 open class AuthenticationIntegrationSpec : IntegrationSpec() {
     override fun clearData() = dataSource.connection.use {
-        it.executeCommand("TRUNCATE TABLE users RESTART IDENTITY")
+        it.executeCommand("TRUNCATE TABLE users RESTART IDENTITY CASCADE;")
     }
 
     protected fun createUser(userCredentialsRequest: UserCredentialsRequest) = dataSource.connection.use {

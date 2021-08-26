@@ -1,6 +1,6 @@
 package com.demo.utils
 
-import com.demo.authentication.userCredentials.UserCredentialsRequest
+import com.demo.authentication.userCredentials.request.UserCredentialsRequest
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.client.HttpClient
 
