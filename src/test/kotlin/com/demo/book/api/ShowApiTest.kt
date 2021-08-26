@@ -51,7 +51,6 @@ class ShowApiTest : BaseIntegrationSpec() {
             createNewMovie(newMovieRequest(100)).body.get()
             createNewShow(newShowRequest(startDate, startTime))
 
-
             val showStartTime = LocalDateTime.now().minusMinutes(10)
             createNewShow(newShowRequest(LocalDate.now().toString(), showStartTime.toString()))
             createNewShow(newShowRequest("2021-09-25", "2021-09-25T15:50:00"))
@@ -72,8 +71,12 @@ class ShowApiTest : BaseIntegrationSpec() {
              |    "id" : 2,
              |    "movieId" : 1,
              |    "showDate" : "2021-08-26",
-             |    "startTime" : "${showStartTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss") )}",
-             |    "endTime" : "${LocalDateTime.now().plusMinutes(90).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss") )}"
+             |    "startTime" : "${showStartTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))}",
+             |    "endTime" : "${
+                LocalDateTime.now()
+                    .plusMinutes(90)
+                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+            }"
              |  } ],
              |  "Upcoming:" : [ {
              |    "id" : 3,
@@ -85,7 +88,6 @@ class ShowApiTest : BaseIntegrationSpec() {
              |}"""
                 .trimMargin().trimIndent()
         }
-
 
         "should get an empty List when there are no saved shows" {
             // When
