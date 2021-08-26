@@ -17,24 +17,9 @@ import javax.sql.DataSource
 
 @MicronautTest
 class MovieApiTest(override var dataSource: DataSource) : BaseIntegrationSpec() {
-
-    override fun beforeEach(testCase: TestCase) {
-        super.beforeEach(testCase)
-        clearData()
-    }
-
     override fun clearData(): Unit = dataSource.connection.use {
         it.executeCommand("TRUNCATE TABLE users RESTART IDENTITY CASCADE;")
         it.executeCommand("TRUNCATE TABLE movies RESTART IDENTITY CASCADE;")
-    }
-
-    private fun createUser(userCredentialsRequest: UserCredentialsRequest) = dataSource.connection.use {
-        it.executeCommand(
-            """
-            | INSERT INTO users (username, password)
-            | VALUES ('${userCredentialsRequest.username}', CRYPT('${userCredentialsRequest.password}', GEN_SALT('bf')));
-            | """.trimMargin().trimIndent()
-        )
     }
 
     init {
@@ -102,25 +87,4 @@ class MovieApiTest(override var dataSource: DataSource) : BaseIntegrationSpec() 
             exception.status shouldBe HttpStatus.UNAUTHORIZED
         }
     }
-
-    private fun getAllMoviesWithAuth(userCredentialsRequest: UserCredentialsRequest) =
-        httpClient.getWithBasicAuth<List<Movie>>(
-            url = "/movies",
-            userCredentialsRequest = userCredentialsRequest
-        )
-
-    private fun createNewMovie(
-        avengersMovie: CreateMovieRequest,
-        userCredentialsRequest: UserCredentialsRequest
-    ) = httpClient.postWithBasicAuth(
-        url = "/movies",
-        body = jsonMapper.writeValueAsString(avengersMovie),
-        userCredentialsRequest = userCredentialsRequest
-    )
-
-    private fun newMovieRequest(duration: Int) =
-        CreateMovieRequest(
-            "Avengers",
-            duration
-        )
 }
