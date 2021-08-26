@@ -24,31 +24,33 @@ class ShowApiTest : BaseIntegrationSpec() {
             createNewMovie(newMovieRequest(100)).body.get()
             createNewShow(newShowRequest(startDate, startTime))
 
-            val response = httpClient.get<List<Show>>("/shows")
+            val response = httpClient.get<Map<String, List<Show>>>("/shows")
             // Then
             response.status shouldBe HttpStatus.OK
             val savedShows = response.body.get()
             savedShows.size shouldBe 1
-            jsonString(savedShows[0]) shouldBe """
-                |{
-                |  "id" : 1,
-                |  "movieId" : 1,
-                |  "showDate" : "2021-08-25",
-                |  "startTime" : "2021-08-25 03:50:36",
-                |  "endTime" : "2021-08-25 05:30:36"
-                |}
-            """.trimMargin().trimIndent()
+            jsonString(savedShows) shouldBe """
+             |{
+             |  "Past:" : [ {
+             |    "id" : 1,
+             |    "movieId" : 1,
+             |    "showDate" : "2021-08-25",
+             |    "startTime" : "2021-08-25 03:50:36",
+             |    "endTime" : "2021-08-25 05:30:36"
+             |  } ]
+             |}"""
+                .trimMargin().trimIndent()
         }
 
         "should get an empty List when there are no saved shows" {
             // When
 
-            val response = httpClient.get<List<Show>>("/shows")
+            val response = httpClient.get<Map<String, List<Show>>>("/shows")
             response.status shouldBe HttpStatus.OK
             val savedShows = response.body.get()
             savedShows.size shouldBe 0
             jsonString(savedShows) shouldBe """
-                [ ]
+                { }
             """.trimMargin().trimIndent()
         }
 

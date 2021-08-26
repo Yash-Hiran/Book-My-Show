@@ -9,7 +9,6 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -95,34 +94,91 @@ class ShowServiceTest : StringSpec({
         isOverlap shouldBe true
     }
 
-    "should get List with past shows" {
-        every { showRepositoryMock.findAllPastShows() }.returns(listOf(Show(
-            1,
-            1,
-            LocalDate.parse("2021-06-09"),
-            LocalDateTime.parse("2021-06-09T12:00:00"),
-            LocalDateTime.parse("2021-06-09T15:00:00")
-        ),Show(
-            1,
-            1,
-            LocalDate.parse("2021-06-08"),
-            LocalDateTime.parse("2021-06-08T12:00:00"),
-            LocalDateTime.parse("2021-06-08T15:00:00")
-        )))
+    "should get a map with all shows sorted by categories" {
+        every { showRepositoryMock.findAllByOrder() }.returns(
+            mapOf(
+                Pair(
+                    "Past:", listOf(
+                        Show(
+                            1,
+                            1,
+                            LocalDate.parse("2020-06-09"),
+                            LocalDateTime.parse("2020-06-09T12:00:00"),
+                            LocalDateTime.parse("2020-06-09T15:00:00")
+                        )
+                    )
+                ), Pair(
+                    "Ongoing :", listOf(
+                        Show(
+                            2,
+                            1,
+                            LocalDate.parse("2021-08-26"),
+                            LocalDateTime.parse("2021-08-26T11:00:00"),
+                            LocalDateTime.parse("2021-08-26T15:00:00")
+                        )
+                    )
+                ),
+                Pair(
+                    "Upcoming :", listOf(
+                        Show(
+                            3,
+                            1,
+                            LocalDate.parse("2021-09-26"),
+                            LocalDateTime.parse("2021-09-26T11:00:00"),
+                            LocalDateTime.parse("2021-09-26T15:00:00")
+                        ),
+                        Show(
+                            5,
+                            1,
+                            LocalDate.parse("2021-09-26"),
+                            LocalDateTime.parse("2021-09-26T11:00:00"),
+                            LocalDateTime.parse("2021-09-26T15:00:00")
+                        )
+                    )
+                )
+            )
+        )
 
-        showService.allPastShows() shouldBe listOf(Show(
-            1,
-            1,
-            LocalDate.parse("2021-06-09"),
-            LocalDateTime.parse("2021-06-09T12:00:00"),
-            LocalDateTime.parse("2021-06-09T15:00:00")
-        ),Show(
-            1,
-            1,
-            LocalDate.parse("2021-06-08"),
-            LocalDateTime.parse("2021-06-08T12:00:00"),
-            LocalDateTime.parse("2021-06-08T15:00:00")
-        ))
+        showService.allShowsByOrder() shouldBe mapOf(
+            Pair(
+                "Past:", listOf(
+                    Show(
+                        1,
+                        1,
+                        LocalDate.parse("2020-06-09"),
+                        LocalDateTime.parse("2020-06-09T12:00:00"),
+                        LocalDateTime.parse("2020-06-09T15:00:00")
+                    )
+                )
+            ), Pair(
+                "Ongoing :", listOf(
+                    Show(
+                        2,
+                        1,
+                        LocalDate.parse("2021-08-26"),
+                        LocalDateTime.parse("2021-08-26T11:00:00"),
+                        LocalDateTime.parse("2021-08-26T15:00:00")
+                    )
+                )
+            ),
+            Pair(
+                "Upcoming :", listOf(
+                    Show(
+                        3,
+                        1,
+                        LocalDate.parse("2021-09-26"),
+                        LocalDateTime.parse("2021-09-26T11:00:00"),
+                        LocalDateTime.parse("2021-09-26T15:00:00")
+                    ),
+                    Show(
+                        5,
+                        1,
+                        LocalDate.parse("2021-09-26"),
+                        LocalDateTime.parse("2021-09-26T11:00:00"),
+                        LocalDateTime.parse("2021-09-26T15:00:00")
+                    )
+                )
+            )
+        )
     }
-
 })

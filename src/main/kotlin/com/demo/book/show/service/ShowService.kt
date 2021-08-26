@@ -46,8 +46,7 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
         return showRepository.findAll()
     }
 
-    fun allShowsByOrder(): Map<String,List<Show>> {
+    fun allShowsByOrder(): Map<String, List<Show>> {
         return showRepository.findAllByOrder()
     }
-
 }

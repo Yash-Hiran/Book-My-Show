@@ -53,10 +53,10 @@ class ShowRepository(@Inject private val datasource: DataSource) {
         )
     }
 
-    fun findAllByOrder(): Map<String,List<Show>> = mapOf(Pair("Past:",findAllPastShows()),
-        Pair("Ongoing:",findAllOngoingShows()), Pair("Upcoming:",findAllUpcomingShows())
+    fun findAllByOrder(): Map<String, List<Show>> = mapOf(
+        Pair("Past:", findAllPastShows()),
+        Pair("Ongoing:", findAllOngoingShows()), Pair("Upcoming:", findAllUpcomingShows())
     )
-
 
     fun findAllPastShows(): List<Show> = datasource.connection.use { connection ->
         GetAllShowsQuery().query(
@@ -100,7 +100,10 @@ class ShowRepository(@Inject private val datasource: DataSource) {
             GetAllShowsParams()
         )
     }.sortedBy { it.endTime.toLocalDateTime() }
-        .filter { it.startTime.toLocalDateTime() < LocalDateTime.now() && it.endTime.toLocalDateTime() > LocalDateTime.now()}
+        .filter {
+            it.startTime.toLocalDateTime() < LocalDateTime.now() &&
+                    it.endTime.toLocalDateTime() > LocalDateTime.now()
+        }
         .map {
             Show(
                 it.id,
