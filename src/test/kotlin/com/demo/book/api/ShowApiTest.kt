@@ -11,12 +11,13 @@ import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class ShowApiTest : BaseIntegrationSpec() {
 
     init {
 
-        "should get all saved shows" {
+        "should get all saved shows (Past only)" {
             // When
             val startDate = "2021-08-25"
             val startTime = "2021-08-25T15:50:36.0680763"
@@ -35,12 +36,56 @@ class ShowApiTest : BaseIntegrationSpec() {
              |    "id" : 1,
              |    "movieId" : 1,
              |    "showDate" : "2021-08-25",
-             |    "startTime" : "2021-08-25 03:50:36",
-             |    "endTime" : "2021-08-25 05:30:36"
+             |    "startTime" : "2021-08-25 15:50:36",
+             |    "endTime" : "2021-08-25 17:30:36"
              |  } ]
              |}"""
                 .trimMargin().trimIndent()
         }
+
+        "should get all saved shows" {
+            // When
+            val startDate = "2021-08-25"
+            val startTime = "2021-08-25T15:50:36.0680763"
+
+            createNewMovie(newMovieRequest(100)).body.get()
+            createNewShow(newShowRequest(startDate, startTime))
+
+
+            val showStartTime = LocalDateTime.now().minusMinutes(10)
+            createNewShow(newShowRequest(LocalDate.now().toString(), showStartTime.toString()))
+            createNewShow(newShowRequest("2021-09-25", "2021-09-25T15:50:00"))
+            val response = httpClient.get<Map<String, List<Show>>>("/shows")
+            // Then
+            response.status shouldBe HttpStatus.OK
+            val savedShows = response.body.get()
+            jsonString(savedShows) shouldBe """
+             |{
+             |  "Past:" : [ {
+             |    "id" : 1,
+             |    "movieId" : 1,
+             |    "showDate" : "2021-08-25",
+             |    "startTime" : "2021-08-25 15:50:36",
+             |    "endTime" : "2021-08-25 17:30:36"
+             |  } ],
+             |  "Ongoing:" : [ {
+             |    "id" : 2,
+             |    "movieId" : 1,
+             |    "showDate" : "2021-08-26",
+             |    "startTime" : "${showStartTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss") )}",
+             |    "endTime" : "${LocalDateTime.now().plusMinutes(90).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss") )}"
+             |  } ],
+             |  "Upcoming:" : [ {
+             |    "id" : 3,
+             |    "movieId" : 1,
+             |    "showDate" : "2021-09-25",
+             |    "startTime" : "2021-09-25 15:50:00",
+             |    "endTime" : "2021-09-25 17:30:00"
+             |  } ]
+             |}"""
+                .trimMargin().trimIndent()
+        }
+
 
         "should get an empty List when there are no saved shows" {
             // When

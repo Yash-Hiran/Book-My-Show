@@ -40,6 +40,11 @@ class ShowServiceTest : StringSpec({
         showService.allShows() shouldBe listOf()
     }
 
+    "should get empty Map when no show exists and findAllByOrder is called" {
+        every { showRepositoryMock.findAllByOrder() }.returns(mapOf())
+        showService.allShowsByOrder() shouldBe mapOf()
+    }
+
     "should return correct end time" {
         val showRequest =
             CreateShowRequest(
