@@ -59,4 +59,9 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
     private fun validateShowStartTime(showStartTime: LocalDateTime): Boolean {
         return showStartTime < LocalDateTime.now()
     }
+
+    fun getAvailableSeatsOfAShow(showId: Int): Int {
+        //TODO exception
+        return showRepository.getAvailableSeatsOfAShow(showId).capacity
+    }
 }

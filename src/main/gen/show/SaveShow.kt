@@ -32,7 +32,8 @@ public data class SaveShowResult(
   public val movieId: Int,
   public val showDate: Date,
   public val startTime: Timestamp,
-  public val endTime: Timestamp
+  public val endTime: Timestamp,
+  public val capacity: Int
 )
 
 public class SaveShowRowMapper : RowMapper<SaveShowResult> {
@@ -41,7 +42,8 @@ public class SaveShowRowMapper : RowMapper<SaveShowResult> {
     movieId = rs.getObject("movie_id") as kotlin.Int,
     showDate = rs.getObject("show_date") as java.sql.Date,
     startTime = rs.getObject("start_time") as java.sql.Timestamp,
-    endTime = rs.getObject("end_time") as java.sql.Timestamp)
+    endTime = rs.getObject("end_time") as java.sql.Timestamp,
+    capacity = rs.getObject("capacity") as kotlin.Int)
 }
 
 public class SaveShowQuery : Query<SaveShowParams, SaveShowResult> {

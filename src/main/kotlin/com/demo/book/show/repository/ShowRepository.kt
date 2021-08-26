@@ -1,12 +1,12 @@
 package com.demo.book.show.repository
 
+import com.demo.book.movie.entity.Movie
 import com.demo.book.show.request.CreateShowRequest
 import com.demo.book.show.entity.Show
+import movie.GetMovieByIdParams
+import movie.GetMovieByIdQuery
 import norm.query
-import show.GetAllShowsParams
-import show.GetAllShowsQuery
-import show.SaveShowParams
-import show.SaveShowQuery
+import show.*
 import java.sql.Date
 import java.sql.Timestamp
 import java.time.LocalDateTime
@@ -49,5 +49,12 @@ class ShowRepository(@Inject private val datasource: DataSource) {
             it.startTime.toLocalDateTime(),
             it.endTime.toLocalDateTime()
         )
+    }
+
+    fun getAvailableSeatsOfAShow(id: Int) = datasource.connection.use { connection ->
+        GetShowCapacityQuery().query(
+            connection,
+            GetShowCapacityParams(id)
+        ).first()
     }
 }

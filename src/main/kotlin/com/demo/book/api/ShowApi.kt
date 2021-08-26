@@ -25,4 +25,10 @@ class ShowApi(@Inject val showService: ShowService) {
     fun saveShow(@Body showRequest: CreateShowRequest): HttpResponse<Int> {
         return HttpResponse.ok(showService.save(showRequest).id)
     }
+
+    @Get("/abc/{showId}")
+    fun getAvailableSeatsOfAShow( showId: Int): HttpResponse<Int> {
+        return HttpResponse.ok(showService.getAvailableSeatsOfAShow(showId))
+    }
 }
+
