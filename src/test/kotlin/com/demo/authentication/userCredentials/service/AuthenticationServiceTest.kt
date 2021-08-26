@@ -32,16 +32,6 @@ class AuthenticationServiceTest() : StringSpec() {
         }
 
         "should return false for incorrect credentials" {
-//            // given
-//            every { mockAuthenticationRepository.checkCredentials(any()) } returns false
-//            val credentials = UserCredentialsRequest("yash", "neo")
-//            // when
-//            val exception = shouldThrow<InvalidUsernameOrPasswordException>
-//            { authenticationService.checkCredentials(credentials) }
-//
-//            // then
-//            exception.message shouldBe "Invalid username or password"
-//            exception.code shouldBe "com.authentication.service"
             val credentials = UserCredentialsRequest("mihir", "12345")
 
             // when
