@@ -11,12 +11,15 @@ import javax.sql.DataSource
 @Singleton
 class AuthenticationRepository(@Inject private val dataSource: DataSource) {
     fun checkCredentials(userCredentialsRequest: UserCredentialsRequest) =
-        CheckCredentialsQuery()
-            .query(
-                dataSource.connection, CheckCredentialsParams(
-                    userCredentialsRequest.username,
-                    userCredentialsRequest.password
+        dataSource.connection.use {
+            CheckCredentialsQuery()
+                .query(
+                    it,
+                    CheckCredentialsParams(
+                        userCredentialsRequest.username,
+                        userCredentialsRequest.password
+                    )
                 )
-            )
-            .isNotEmpty()
+                .isNotEmpty()
+        }
 }
