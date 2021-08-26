@@ -282,5 +282,4 @@ class ShowServiceTest : StringSpec({
         val isOverlap = showService.checkOverlapOfShows(showRequest.startTime, endTime)
         isOverlap shouldBe false
     }
-
 })

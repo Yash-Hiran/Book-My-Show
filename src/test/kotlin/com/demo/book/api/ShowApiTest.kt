@@ -3,14 +3,10 @@ package com.demo.book.api
 import com.demo.authentication.userCredentials.request.UserCredentialsRequest
 import com.demo.book.BookingIntegrationSpec
 import com.demo.book.show.entity.Show
-import com.demo.book.utils.get
 import com.demo.utils.getWithBasicAuth
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.micronaut.http.HttpStatus
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.test.extensions.kotest.annotation.MicronautTest
 import norm.executeCommand

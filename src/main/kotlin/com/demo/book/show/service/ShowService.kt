@@ -59,7 +59,6 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
     private fun validateShowDate(showRequest: CreateShowRequest) =
         showRequest.showDate == showRequest.startTime.toLocalDate()
 
-
     private fun validateShowStartTime(showStartTime: LocalDateTime) =
         showStartTime < LocalDateTime.now()
 }
