@@ -1,7 +1,7 @@
 package com.demo.book.show.service
 
 import com.demo.book.movie.entity.Movie
-import com.demo.book.movie.exception.InvalidMovieDetailsException
+import com.demo.book.show.exception.InvalidShowDetailsException
 import com.demo.book.movie.repository.MovieRepository
 import com.demo.book.show.repository.ShowRepository
 import com.demo.book.movie.service.MovieService
@@ -18,9 +18,15 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
 
         val movieService = MovieService(movieRepository)
         val movie = movieService.getMovieWithId(showRequest.movieId)
+
+        if (validateShowStartTime(showRequest.startTime))
+            throw InvalidShowDetailsException("Can not schedule a show for past show time")
+        if (!validateShowDate(showRequest))
+            throw InvalidShowDetailsException("Show date and start time date does not match")
         val endTimeInTimeStamp = getEndTime(showRequest, movie)
+
         if (checkOverlap(showRequest, endTimeInTimeStamp))
-            throw InvalidMovieDetailsException("Overlap in show timings found")
+            throw InvalidShowDetailsException("Already have a show scheduled during that time")
         return showRepository.save(showRequest, endTimeInTimeStamp)
     }
 
@@ -31,7 +37,7 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
         return showRequest.startTime.plusMinutes(movie.duration.toLong())
     }
 
-    fun checkOverlap(
+    private fun checkOverlap(
         showRequest: CreateShowRequest,
         endTimeInTimeStamp: LocalDateTime
     ): Boolean {
@@ -44,5 +50,13 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
 
     fun allShows(): List<Show> {
         return showRepository.findAll()
+    }
+
+    private fun validateShowDate(showRequest: CreateShowRequest): Boolean {
+        return showRequest.showDate == showRequest.startTime.toLocalDate()
+    }
+
+    private fun validateShowStartTime(showStartTime: LocalDateTime): Boolean {
+        return showStartTime < LocalDateTime.now()
     }
 }

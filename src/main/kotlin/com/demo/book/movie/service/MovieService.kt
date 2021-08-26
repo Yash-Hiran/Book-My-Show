@@ -18,9 +18,7 @@ class MovieService(@Inject val movieRepository: MovieRepository) {
         return movieRepository.save(movieRequest)
     }
 
-    fun allMovies(): List<Movie> {
-        return movieRepository.findAll()
-    }
+    fun allMovies() = movieRepository.findAll()
 
     fun getMovieWithId(id: Int): Movie {
         val movieList = movieRepository.getMovieWithId(id)

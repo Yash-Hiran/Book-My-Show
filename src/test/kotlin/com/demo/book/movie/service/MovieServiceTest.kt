@@ -26,7 +26,7 @@ class MovieServiceTest : StringSpec({
         verify(exactly = 1) { movieRepositoryMock.save(movieRequest) }
     }
 
-    "should throw an exception when duration is less than 5" {
+    "should throw an exception when duration is less than 5 minutes" {
         val movieRequest = CreateMovieRequest("Avengers", 3)
         val exception = shouldThrow<InvalidMovieDetailsException> { movieService.save(movieRequest) }
 
@@ -34,7 +34,7 @@ class MovieServiceTest : StringSpec({
                 " 360 minutes(both included)"
     }
 
-    "should throw an exception when duration is more than 360" {
+    "should throw an exception when duration is more than 360 minutes" {
         val movieRequest = CreateMovieRequest("Avengers", 370)
         val exception = shouldThrow<InvalidMovieDetailsException> { movieService.save(movieRequest) }
 
@@ -42,7 +42,7 @@ class MovieServiceTest : StringSpec({
                 " 360 minutes(both included)"
     }
 
-    "should save movie to repository when duration is 5" {
+    "should save movie to repository when duration is 5 minutes" {
         every { movieRepositoryMock.save(any()) }.returns(Movie(1, "Avengers", 5))
 
         val movieRequest = CreateMovieRequest("Avengers", 5)
@@ -52,7 +52,7 @@ class MovieServiceTest : StringSpec({
         verify(exactly = 1) { movieRepositoryMock.save(movieRequest) }
     }
 
-    "should save movie to repository when duration is 360" {
+    "should save movie to repository when duration is 360 minutes" {
         every { movieRepositoryMock.save(any()) }.returns(Movie(1, "Avengers", 360))
 
         val movieRequest = CreateMovieRequest("Avengers", 360)

@@ -12,20 +12,20 @@ import norm.executeCommand
 @MicronautTest
 class ShowApiTest : BookingIntegrationSpec() {
     override fun clearData() = dataSource.connection.use {
-            it.executeCommand("TRUNCATE TABLE users RESTART IDENTITY CASCADE;")
-            it.executeCommand("TRUNCATE TABLE shows RESTART IDENTITY CASCADE;")
-            it.executeCommand("TRUNCATE TABLE movies RESTART IDENTITY CASCADE;")
-        }
+        it.executeCommand("TRUNCATE TABLE users RESTART IDENTITY CASCADE;")
+        it.executeCommand("TRUNCATE TABLE shows RESTART IDENTITY CASCADE;")
+        it.executeCommand("TRUNCATE TABLE movies RESTART IDENTITY CASCADE;")
+    }
 
     init {
         val adminCredentials = UserCredentialsRequest("admin", "kaiser")
         val nonAdminCredentials = UserCredentialsRequest("foo", "bar")
 
-        "should get all saved shows" {
+        "should get all saved shows with correct credentials" {
             // Given
             createUser(adminCredentials)
-            val startDate = "2021-08-25"
-            val startTime = "2021-08-25T15:50:36.0680763"
+            val startDate = "2021-09-25"
+            val startTime = "2021-09-25T15:50:36.0680763"
 
             // When
             createNewMovie(newMovieRequest(100), adminCredentials)
@@ -40,9 +40,9 @@ class ShowApiTest : BookingIntegrationSpec() {
                 |{
                 |  "id" : 1,
                 |  "movieId" : 1,
-                |  "showDate" : "2021-08-25",
-                |  "startTime" : "2021-08-25 03:50:36",
-                |  "endTime" : "2021-08-25 05:30:36"
+                |  "showDate" : "2021-09-25",
+                |  "startTime" : "2021-09-25 15:50:36",
+                |  "endTime" : "2021-09-25 17:30:36"
                 |}
             """.trimMargin().trimIndent()
         }
@@ -64,8 +64,8 @@ class ShowApiTest : BookingIntegrationSpec() {
         "should add show with correct credentials" {
             // When
             createUser(adminCredentials)
-            val startDate = "2021-08-26"
-            val startTime = "2021-08-26T15:50:36.0680763"
+            val startDate = "2021-09-26"
+            val startTime = "2021-09-26T15:50:36.0680763"
             createNewMovie(newMovieRequest(100), adminCredentials)
             val response = createNewShowWithBasicAuth(newShowRequest(startDate, startTime), adminCredentials)
 
