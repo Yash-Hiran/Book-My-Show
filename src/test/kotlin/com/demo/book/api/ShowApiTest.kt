@@ -1,7 +1,7 @@
 package com.demo.book.api
 
 import com.demo.authentication.userCredentials.request.UserCredentialsRequest
-import com.demo.book.BaseIntegrationSpec
+import com.demo.book.BookingIntegrationSpec
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.micronaut.http.HttpStatus
@@ -10,14 +10,12 @@ import io.micronaut.test.extensions.kotest.annotation.MicronautTest
 import norm.executeCommand
 
 @MicronautTest
-class ShowApiTest : BaseIntegrationSpec() {
-    override fun clearData() {
-        dataSource.connection.use {
+class ShowApiTest : BookingIntegrationSpec() {
+    override fun clearData() = dataSource.connection.use {
             it.executeCommand("TRUNCATE TABLE users RESTART IDENTITY CASCADE;")
             it.executeCommand("TRUNCATE TABLE shows RESTART IDENTITY CASCADE;")
             it.executeCommand("TRUNCATE TABLE movies RESTART IDENTITY CASCADE;")
         }
-    }
 
     init {
         val adminCredentials = UserCredentialsRequest("admin", "kaiser")

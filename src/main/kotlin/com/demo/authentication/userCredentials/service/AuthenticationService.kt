@@ -7,5 +7,6 @@ import javax.inject.Singleton
 
 @Singleton
 class AuthenticationService(@Inject private val authenticationRepository: AuthenticationRepository) {
-    fun checkCredentials(userCredentialsRequest: UserCredentialsRequest) = authenticationRepository.checkCredentials(userCredentialsRequest)
+    fun checkCredentials(userCredentialsRequest: UserCredentialsRequest) =
+        authenticationRepository.checkCredentials(userCredentialsRequest)
 }

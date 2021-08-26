@@ -23,7 +23,6 @@ import java.text.DateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Inject
-import javax.sql.DataSource
 
 @MicronautTest
 abstract class BookingIntegrationSpec : IntegrationSpec() {

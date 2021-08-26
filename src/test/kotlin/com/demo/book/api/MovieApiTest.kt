@@ -1,13 +1,8 @@
 package com.demo.book.api
 
 import com.demo.authentication.userCredentials.request.UserCredentialsRequest
-import com.demo.book.BaseIntegrationSpec
-import com.demo.book.movie.entity.Movie
-import com.demo.book.movie.request.CreateMovieRequest
-import com.demo.utils.getWithBasicAuth
-import com.demo.utils.postWithBasicAuth
+import com.demo.book.BookingIntegrationSpec
 import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.core.test.TestCase
 import io.kotest.matchers.shouldBe
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.exceptions.HttpClientResponseException
@@ -16,8 +11,8 @@ import norm.executeCommand
 import javax.sql.DataSource
 
 @MicronautTest
-class MovieApiTest(override var dataSource: DataSource) : BaseIntegrationSpec() {
-    override fun clearData(): Unit = dataSource.connection.use {
+class MovieApiTest(override var dataSource: DataSource) : BookingIntegrationSpec() {
+    override fun clearData() = dataSource.connection.use {
         it.executeCommand("TRUNCATE TABLE users RESTART IDENTITY CASCADE;")
         it.executeCommand("TRUNCATE TABLE movies RESTART IDENTITY CASCADE;")
     }
@@ -71,7 +66,8 @@ class MovieApiTest(override var dataSource: DataSource) : BaseIntegrationSpec() 
 
         "should respond with bad request when saving a movie with incorrect credentials" {
             // When
-            val exception = shouldThrow<HttpClientResponseException> { createNewMovie(newMovieRequest(100), nonAdminCredentials) }
+            val exception = shouldThrow<HttpClientResponseException>
+            { createNewMovie(newMovieRequest(100), nonAdminCredentials) }
 
             // Then
             exception.message shouldBe "Unauthorized"
