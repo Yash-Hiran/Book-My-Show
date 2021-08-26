@@ -1,47 +1,46 @@
 package com.demo.authentication.userCredentials.service
 
-import com.demo.authentication.AuthenticationIntegrationSpec
-import com.demo.authentication.exception.InvalidUsernameOrPasswordException
+import com.demo.authentication.userCredentials.request.UserCredentialsRequest
 import com.demo.authentication.userCredentials.repository.AuthenticationRepository
-import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.IsolationMode
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
-import io.micronaut.http.BasicAuth
 import io.micronaut.test.extensions.kotest.annotation.MicronautTest
-import javax.inject.Inject
-import javax.sql.DataSource
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 
 @MicronautTest
-class AuthenticationServiceTest(@Inject override var dataSource: DataSource) : AuthenticationIntegrationSpec() {
-    private val authenticationRepository = AuthenticationRepository(dataSource)
-    private val authenticationService = AuthenticationService(authenticationRepository)
+class AuthenticationServiceTest() : StringSpec() {
+    private val mockAuthenticationRepository = mockk<AuthenticationRepository>()
+    private val authenticationService = AuthenticationService(mockAuthenticationRepository)
+
+    override fun isolationMode() = IsolationMode.InstancePerTest
 
     init {
-        addPgcryptoExtension()
-
         "should return true for correct credentials" {
             // given
-            createUser(BasicAuth("mihir", "12345"))
-            val credentials = BasicAuth("mihir", "12345")
+            val credentials = UserCredentialsRequest("mihir", "12345")
 
             // when
+            every { mockAuthenticationRepository.checkCredentials(credentials) } returns true
             val result = authenticationService.checkCredentials(credentials)
 
             // then
+            verify(exactly = 1) { mockAuthenticationRepository.checkCredentials(credentials) }
             result shouldBe true
         }
 
-        "should throw exception for incorrect credentials" {
-            // given
-            createUser(BasicAuth("yash", "asdf"))
-            val credentials = BasicAuth("mihir", "12345")
+        "should return false for incorrect credentials" {
+            val credentials = UserCredentialsRequest("mihir", "12345")
 
             // when
-            val exception = shouldThrow<InvalidUsernameOrPasswordException>
-            { authenticationService.checkCredentials(credentials) }
+            every { mockAuthenticationRepository.checkCredentials(credentials) } returns false
+            val result = authenticationService.checkCredentials(credentials)
 
             // then
-            exception.message shouldBe "Invalid username or password"
-            exception.code shouldBe "com.authentication.service"
+            verify(exactly = 1) { mockAuthenticationRepository.checkCredentials(credentials) }
+            result shouldBe false
         }
     }
 }

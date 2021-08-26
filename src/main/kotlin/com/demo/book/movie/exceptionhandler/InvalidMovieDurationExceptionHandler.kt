@@ -1,6 +1,6 @@
 package com.demo.book.movie.exceptionhandler
 
-import com.demo.book.movie.exception.InvalidMovieDurationException
+import com.demo.book.movie.exception.InvalidMovieDetailsException
 import io.micronaut.context.annotation.Requirements
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
@@ -12,10 +12,10 @@ import javax.inject.Singleton
 @Produces
 @Singleton
 @Requirements(
-    Requires(classes = [InvalidMovieDurationException::class, ExceptionHandler::class])
+    Requires(classes = [InvalidMovieDetailsException::class, ExceptionHandler::class])
 )
-class InvalidMovieDurationExceptionHandler : ExceptionHandler<InvalidMovieDurationException, HttpResponse<ApiError>> {
-    override fun handle(request: HttpRequest<*>?, exception: InvalidMovieDurationException): HttpResponse<ApiError> {
+class InvalidMovieDurationExceptionHandler : ExceptionHandler<InvalidMovieDetailsException, HttpResponse<ApiError>> {
+    override fun handle(request: HttpRequest<*>?, exception: InvalidMovieDetailsException): HttpResponse<ApiError> {
         return HttpResponse.badRequest(ApiError(exception.errorCode, exception.message))
     }
 }

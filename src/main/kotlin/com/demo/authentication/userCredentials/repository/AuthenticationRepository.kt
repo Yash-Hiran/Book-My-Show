@@ -2,7 +2,7 @@ package com.demo.authentication.userCredentials.repository
 
 import authentication.CheckCredentialsParams
 import authentication.CheckCredentialsQuery
-import io.micronaut.http.BasicAuth
+import com.demo.authentication.userCredentials.request.UserCredentialsRequest
 import norm.query
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -10,8 +10,15 @@ import javax.sql.DataSource
 
 @Singleton
 class AuthenticationRepository(@Inject private val dataSource: DataSource) {
-    fun checkCredentials(basicAuth: BasicAuth) =
-        CheckCredentialsQuery()
-            .query(dataSource.connection, CheckCredentialsParams(basicAuth.username, basicAuth.password))
-            .isNotEmpty()
+    fun checkCredentials(userCredentialsRequest: UserCredentialsRequest) =
+        dataSource.connection.use {
+            CheckCredentialsQuery()
+                .query(
+                    it,
+                    CheckCredentialsParams(
+                        userCredentialsRequest.username,
+                        userCredentialsRequest.password
+                    )
+                ).isNotEmpty()
+        }
 }
