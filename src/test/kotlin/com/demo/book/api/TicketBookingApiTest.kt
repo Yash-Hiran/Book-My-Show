@@ -1,7 +1,9 @@
 package com.demo.book.api
 
+import com.demo.ApiError
 import com.demo.authentication.userCredentials.request.UserCredentialsRequest
 import com.demo.book.BookingIntegrationSpec
+import com.demo.book.ticket.exception.TicketIsAlreadyBookedException
 import com.demo.book.ticket.request.TicketRequest
 import com.demo.utils.postWithBasicAuth
 import io.kotest.assertions.throwables.shouldThrow
@@ -55,6 +57,22 @@ class TicketBookingApiTest : BookingIntegrationSpec() {
             // Then
             exception.status shouldBe HttpStatus.UNAUTHORIZED
             exception.message shouldBe "Unauthorized"
+        }
+
+        "should not book a ticket if already booked" {
+            val showDate = LocalDate.now().plusDays(1).toString()
+            val startTime = LocalDateTime.now().plusDays(1).toString()
+            createUser(adminCredentials)
+            createNewMovie(newMovieRequest(120), adminCredentials)
+            createNewShowWithBasicAuth(newShowRequest(showDate, startTime), adminCredentials)
+
+            val ticketRequest = createTicketRequest(1,1,1234567890)
+            // When
+            bookTicketWithAuth(ticketRequest,adminCredentials)
+            val exception = shouldThrow<HttpClientResponseException> { bookTicketWithAuth(ticketRequest,adminCredentials) }
+            exception.status shouldBe HttpStatus.BAD_REQUEST
+            exception.message shouldBe "Ticket is already booked"
+
         }
     }
 

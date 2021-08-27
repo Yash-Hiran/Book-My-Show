@@ -3,8 +3,7 @@ package com.demo.book.ticket.repository
 import com.demo.book.ticket.entity.Ticket
 import com.demo.book.ticket.request.TicketRequest
 import norm.query
-import ticket.SaveTicketParams
-import ticket.SaveTicketQuery
+import ticket.*
 import javax.inject.Inject
 import javax.inject.Singleton
 import javax.sql.DataSource
@@ -23,6 +22,16 @@ class TicketBookingRepository(@Inject private val dataSource: DataSource) {
                 seatNo = ticketResult.seatno,
                 phoneNo = ticketResult.phoneno
             )
+        }
+    }
+
+    fun isTicketBooked(ticketRequest: TicketRequest) = dataSource.connection.use { connection ->
+        run {
+            val result = CheckDuplicateTicketQuery().query(
+                connection,
+                CheckDuplicateTicketParams(ticketRequest.showId, ticketRequest.seatNo)
+            )[0]
+            result.count != 0L
         }
     }
 }
