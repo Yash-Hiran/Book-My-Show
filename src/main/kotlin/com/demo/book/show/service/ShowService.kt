@@ -60,8 +60,11 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
         //TODO exception
 
         val showCapacity = showRepository.getAvailableSeatsOfAShow(showId).capacity
+        val bookedSeats = showRepository.getBookedSeatsOfAShow(showId)
+
         val availableSeatsList = mutableListOf<Int>()
         for (seatNumber in 1..showCapacity){
+
             availableSeatsList.add(seatNumber)
         }
 

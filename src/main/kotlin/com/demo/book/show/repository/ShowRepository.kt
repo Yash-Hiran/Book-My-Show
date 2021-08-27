@@ -4,6 +4,8 @@ import com.demo.book.show.request.CreateShowRequest
 import com.demo.book.show.entity.Show
 import norm.query
 import show.*
+import ticket.*
+import ticket.GetBookedSeatsParams
 import java.sql.Date
 import java.sql.Timestamp
 import java.time.LocalDateTime
@@ -116,5 +118,12 @@ class ShowRepository(@Inject private val datasource: DataSource) {
             connection,
             GetShowCapacityParams(id)
         ).first()
+    }
+
+    fun getBookedSeatsOfAShow(showId: Int) = datasource.connection.use{ connection ->
+        GetBookedSeatsQuery().query(
+            connection,
+            GetBookedSeatsParams(showId)
+        )
     }
 }
