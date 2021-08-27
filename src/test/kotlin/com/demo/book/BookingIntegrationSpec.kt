@@ -62,7 +62,7 @@ abstract class BookingIntegrationSpec : IntegrationSpec() {
         )
 
     protected fun getAllShowsWithAuth(userCredentialsRequest: UserCredentialsRequest) =
-        httpClient.getWithBasicAuth<List<Show>>("/shows", userCredentialsRequest)
+        httpClient.getWithBasicAuth<Map<String, List<Show>>>("/shows", userCredentialsRequest)
 
     protected fun newShowRequest(startDate: String, startTime: String) = CreateShowRequest(
         1,

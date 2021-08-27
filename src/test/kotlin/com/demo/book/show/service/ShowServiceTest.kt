@@ -73,6 +73,21 @@ class ShowServiceTest : StringSpec({
         showService.allShows() shouldBe listOf()
     }
 
+    "should get empty Map when no show exists and findAllByOrder is called" {
+        every { showRepositoryMock.findAllByOrder() }.returns(mapOf())
+        showService.allShowsByOrder() shouldBe mapOf()
+    }
+
+    "should return correct end time" {
+        val showRequest =
+            CreateShowRequest(
+                1, LocalDate.parse("2021-10-10"),
+                LocalDateTime.parse("2021-10-10T15:00:00")
+            )
+        val movie = Movie(1, "Bird Box", 30)
+        showService.getEndTime(showRequest, movie) shouldBe LocalDateTime.parse("2021-10-10T15:30:00.0")
+    }
+
     "should throw an exception if show is overlapping" {
 
         val createShowRequest =
@@ -108,6 +123,94 @@ class ShowServiceTest : StringSpec({
         exception.message shouldBe "Already have a show scheduled during that time"
     }
 
+    "should get a map with all shows sorted by categories" {
+        every { showRepositoryMock.findAllByOrder() }.returns(
+            mapOf(
+                Pair(
+                    "Past:", listOf(
+                        Show(
+                            1,
+                            1,
+                            LocalDate.parse("2020-06-09"),
+                            LocalDateTime.parse("2020-06-09T12:00:00"),
+                            LocalDateTime.parse("2020-06-09T15:00:00")
+                        )
+                    )
+                ), Pair(
+                    "Ongoing :", listOf(
+                        Show(
+                            2,
+                            1,
+                            LocalDate.parse("2021-08-26"),
+                            LocalDateTime.parse("2021-08-26T11:00:00"),
+                            LocalDateTime.parse("2021-08-26T15:00:00")
+                        )
+                    )
+                ),
+                Pair(
+                    "Upcoming :", listOf(
+                        Show(
+                            3,
+                            1,
+                            LocalDate.parse("2021-09-26"),
+                            LocalDateTime.parse("2021-09-26T11:00:00"),
+                            LocalDateTime.parse("2021-09-26T15:00:00")
+                        ),
+                        Show(
+                            5,
+                            1,
+                            LocalDate.parse("2021-09-26"),
+                            LocalDateTime.parse("2021-09-26T11:00:00"),
+                            LocalDateTime.parse("2021-09-26T15:00:00")
+                        )
+                    )
+                )
+            )
+        )
+
+        showService.allShowsByOrder() shouldBe mapOf(
+            Pair(
+                "Past:", listOf(
+                    Show(
+                        1,
+                        1,
+                        LocalDate.parse("2020-06-09"),
+                        LocalDateTime.parse("2020-06-09T12:00:00"),
+                        LocalDateTime.parse("2020-06-09T15:00:00")
+                    )
+                )
+            ), Pair(
+                "Ongoing :", listOf(
+                    Show(
+                        2,
+                        1,
+                        LocalDate.parse("2021-08-26"),
+                        LocalDateTime.parse("2021-08-26T11:00:00"),
+                        LocalDateTime.parse("2021-08-26T15:00:00")
+                    )
+                )
+            ),
+            Pair(
+                "Upcoming :", listOf(
+                    Show(
+                        3,
+                        1,
+                        LocalDate.parse("2021-09-26"),
+                        LocalDateTime.parse("2021-09-26T11:00:00"),
+                        LocalDateTime.parse("2021-09-26T15:00:00")
+                    ),
+                    Show(
+                        5,
+                        1,
+                        LocalDate.parse("2021-09-26"),
+                        LocalDateTime.parse("2021-09-26T11:00:00"),
+                        LocalDateTime.parse("2021-09-26T15:00:00")
+                    )
+                )
+            )
+        )
+    }
+
     "should throw an exception if movie does not exist and we try to save a show for that movie" {
         every { movieRepositoryMock.getMovieWithId(any()) }.returns(listOf())
         val createShowRequest =
@@ -130,5 +233,53 @@ class ShowServiceTest : StringSpec({
             CreateShowRequest(1, LocalDate.parse("2021-10-10"), LocalDateTime.parse("2021-10-12T12:30:00"))
         val exception = shouldThrow<InvalidShowDetailsException> { showService.save(createShowRequest) }
         exception.message shouldBe "Show date and start time date does not match"
+    }
+
+    "should return true for overlap" {
+        every { showRepositoryMock.findAll() }.returns(
+            listOf(
+                Show(
+                    1,
+                    1,
+                    LocalDate.parse("2021-10-10"),
+                    LocalDateTime.parse("2021-10-10T12:00:00"),
+                    LocalDateTime.parse("2021-10-10T12:50:00")
+                )
+            )
+        )
+        val showRequest =
+            CreateShowRequest(
+                1,
+                LocalDate.parse("2021-10-10"),
+                LocalDateTime.parse("2021-10-10T12:30:00")
+            )
+        val movie = Movie(1, "Bird Box", 30)
+        val endTime = showService.getEndTime(showRequest, movie)
+        val isOverlap = showService.checkOverlapOfShows(showRequest.startTime, endTime)
+        isOverlap shouldBe true
+    }
+
+    "should return false for no overlap" {
+        every { showRepositoryMock.findAll() }.returns(
+            listOf(
+                Show(
+                    1,
+                    1,
+                    LocalDate.parse("2021-11-10"),
+                    LocalDateTime.parse("2021-11-10T12:00:00"),
+                    LocalDateTime.parse("2021-11-10T12:50:00")
+                )
+            )
+        )
+        val showRequest =
+            CreateShowRequest(
+                1,
+                LocalDate.parse("2021-10-10"),
+                LocalDateTime.parse("2021-10-10T12:30:00")
+            )
+        val movie = Movie(1, "Bird Box", 30)
+        val endTime = showService.getEndTime(showRequest, movie)
+        val isOverlap = showService.checkOverlapOfShows(showRequest.startTime, endTime)
+        isOverlap shouldBe false
     }
 })
