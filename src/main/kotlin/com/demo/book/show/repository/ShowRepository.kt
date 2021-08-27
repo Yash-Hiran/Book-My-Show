@@ -5,7 +5,6 @@ import com.demo.book.show.entity.Show
 import norm.command
 import norm.query
 import show.*
-import java.sql.Connection
 import java.sql.Date
 import java.sql.Timestamp
 import java.time.LocalDateTime

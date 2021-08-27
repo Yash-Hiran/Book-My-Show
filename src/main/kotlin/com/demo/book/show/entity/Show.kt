@@ -14,5 +14,5 @@ data class Show(
     val startTime: LocalDateTime,
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     val endTime: LocalDateTime,
-    val price : Int = 0
+    val price: Int = 0
 )

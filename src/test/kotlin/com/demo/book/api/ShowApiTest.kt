@@ -41,7 +41,8 @@ class ShowApiTest : BookingIntegrationSpec() {
              |    "movieId" : 1,
              |    "showDate" : "2021-09-25",
              |    "startTime" : "2021-09-25 15:50:00",
-             |    "endTime" : "2021-09-25 17:30:00"
+             |    "endTime" : "2021-09-25 17:30:00",
+             |    "price" : 0
              |  } ]
              |}"""
                 .trimMargin().trimIndent()

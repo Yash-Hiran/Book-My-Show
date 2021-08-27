@@ -23,7 +23,7 @@ class ShowRepositoryTest(@Inject override var dataSource: DataSource) : BookingI
 
     init {
 
-        "should save the price of a show"{
+        "should save the price of a show" {
             // given
             val startTime = "2021-09-25T15:50:00"
             val movie = newMovieRequest(10)
@@ -32,11 +32,11 @@ class ShowRepositoryTest(@Inject override var dataSource: DataSource) : BookingI
             showRepository.save(show, LocalDateTime.of(2021, 9, 25, 16, 0, 0))
 
             // when
-            showRepository.updatePrice(1, 100)
+             val r = showRepository.updatePrice(1, 100)
             val result = showRepository.getShowById(1)
 
             // then
-            result.price shouldBe 100
+            r shouldBe 100
         }
 
         "should save and return the saved show" {
