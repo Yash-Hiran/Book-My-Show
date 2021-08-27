@@ -23,11 +23,12 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
             throw InvalidShowDetailsException("Can not schedule a show for past show time")
         if (!validateShowDate(showRequest))
             throw InvalidShowDetailsException("Show date and start time date does not match")
-        val endTimeInTimeStamp = getEndTime(showRequest, movie)
 
-        if (checkOverlap(showRequest, endTimeInTimeStamp))
+        val showEndTime = getEndTime(showRequest, movie)
+
+        if (checkOverlapOfShows(showRequest.startTime, showEndTime))
             throw InvalidShowDetailsException("Already have a show scheduled during that time")
-        return showRepository.save(showRequest, endTimeInTimeStamp)
+        return showRepository.save(showRequest, showEndTime)
     }
 
     fun getEndTime(
@@ -37,14 +38,14 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
         return showRequest.startTime.plusMinutes(movie.duration.toLong())
     }
 
-    private fun checkOverlap(
-        showRequest: CreateShowRequest,
-        endTimeInTimeStamp: LocalDateTime
+    fun checkOverlapOfShows(
+        startTime: LocalDateTime,
+        endTime: LocalDateTime
     ): Boolean {
         val showList = allShows()
         return showList.any {
-            showRequest.startTime in it.startTime..it.endTime ||
-                    endTimeInTimeStamp in it.startTime..it.endTime
+            startTime in it.startTime..it.endTime ||
+                    endTime in it.startTime..it.endTime
         }
     }
 
@@ -52,16 +53,24 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
         return showRepository.findAll()
     }
 
-    private fun validateShowDate(showRequest: CreateShowRequest): Boolean {
-        return showRequest.showDate == showRequest.startTime.toLocalDate()
-    }
+    fun allShowsByOrder() = showRepository.findAllByOrder()
 
-    private fun validateShowStartTime(showStartTime: LocalDateTime): Boolean {
-        return showStartTime < LocalDateTime.now()
-    }
 
-    fun getAvailableSeatsOfAShow(showId: Int): Int {
+    fun getAvailableSeatsOfAShow(showId: Int): MutableList<Int> {
         //TODO exception
-        return showRepository.getAvailableSeatsOfAShow(showId).capacity
+
+        val showCapacity = showRepository.getAvailableSeatsOfAShow(showId).capacity
+        val availableSeatsList = mutableListOf<Int>()
+        for (seatNumber in 1..showCapacity){
+            availableSeatsList.add(seatNumber)
+        }
+
+        return availableSeatsList
     }
+
+    private fun validateShowDate(showRequest: CreateShowRequest) =
+        showRequest.showDate == showRequest.startTime.toLocalDate()
+
+    private fun validateShowStartTime(showStartTime: LocalDateTime) =
+        showStartTime < LocalDateTime.now()
 }
