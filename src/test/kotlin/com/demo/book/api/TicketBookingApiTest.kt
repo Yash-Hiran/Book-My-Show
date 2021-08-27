@@ -4,8 +4,10 @@ import com.demo.authentication.userCredentials.request.UserCredentialsRequest
 import com.demo.book.BookingIntegrationSpec
 import com.demo.book.ticket.request.TicketRequest
 import com.demo.utils.postWithBasicAuth
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.micronaut.http.HttpStatus
+import io.micronaut.http.client.exceptions.HttpClientResponseException
 import norm.executeCommand
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -20,6 +22,7 @@ class TicketBookingApiTest : BookingIntegrationSpec() {
 
     init {
         val adminCredentials = UserCredentialsRequest("abc", "def")
+        val nonAdminCredentials = UserCredentialsRequest("uvw", "xyz")
 
         "should save a ticket with admin credentials" {
             // Given
@@ -35,6 +38,22 @@ class TicketBookingApiTest : BookingIntegrationSpec() {
             // Then
             response.status shouldBe HttpStatus.OK
             response.body() shouldBe TicketRequest(1, 1, 1234567890)
+        }
+
+        "should fail to save a ticket with non-admin credentials" {
+            // Given
+            val showDate = LocalDate.now().plusDays(1).toString()
+            val startTime = LocalDateTime.now().plusDays(1).toString()
+            createUser(adminCredentials)
+            createNewMovie(newMovieRequest(120), adminCredentials)
+            createNewShowWithBasicAuth(newShowRequest(showDate, startTime), adminCredentials)
+
+            // When
+            val exception = shouldThrow<HttpClientResponseException> { bookTicketWithAuth(createTicketRequest(1, 1, 1234567890), nonAdminCredentials) }
+
+            // Then
+            exception.status shouldBe HttpStatus.UNAUTHORIZED
+            exception.message shouldBe "Unauthorized"
         }
     }
 
