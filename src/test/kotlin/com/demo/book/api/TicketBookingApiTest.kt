@@ -22,13 +22,11 @@ class TicketBookingApiTest : BookingIntegrationSpec() {
 
     init {
         val adminCredentials = UserCredentialsRequest("abc", "def")
-        val nonAdminCredentials = UserCredentialsRequest("uvw", "xyz")
 
         "should save a ticket with admin credentials" {
             // Given
-            println("date string" + LocalDateTime.now().plusDays(1).toString())
             val showDate = LocalDate.now().plusDays(1).toString()
-            val startTime = "2021-08-28T15:50:36.0680763"
+            val startTime = LocalDateTime.now().plusDays(1).toString()
             createUser(adminCredentials)
             createNewMovie(newMovieRequest(120), adminCredentials)
             createNewShowWithBasicAuth(newShowRequest(showDate, startTime), adminCredentials)
