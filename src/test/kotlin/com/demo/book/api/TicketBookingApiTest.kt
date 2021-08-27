@@ -24,7 +24,7 @@ class TicketBookingApiTest : BookingIntegrationSpec() {
         val adminCredentials = UserCredentialsRequest("abc", "def")
         val nonAdminCredentials = UserCredentialsRequest("uvw", "xyz")
 
-        "should save a ticket with admin credentials" {
+        "should save a ticket with admin credentials within 7 days" {
             // Given
             val showDate = LocalDate.now().plusDays(1).toString()
             val startTime = LocalDateTime.now().plusDays(1).toString()
@@ -33,11 +33,11 @@ class TicketBookingApiTest : BookingIntegrationSpec() {
             createNewShowWithBasicAuth(newShowRequest(showDate, startTime), adminCredentials)
 
             // When
-            val response = bookTicketWithAuth(createTicketRequest(1, 1, 1234567890), adminCredentials)
+            val response = bookTicketWithAuth(createTicketRequest(1, 1234567890), adminCredentials)
 
             // Then
             response.status shouldBe HttpStatus.OK
-            response.body() shouldBe TicketRequest(1, 1, 1234567890)
+            response.body() shouldBe TicketRequest(1, 1234567890)
         }
 
         "should fail to save a ticket with non-admin credentials" {
@@ -50,31 +50,33 @@ class TicketBookingApiTest : BookingIntegrationSpec() {
 
             // When
             val exception = shouldThrow<HttpClientResponseException>
-            { bookTicketWithAuth(createTicketRequest(1, 1, 1234567890), nonAdminCredentials) }
+            { bookTicketWithAuth(createTicketRequest(1, 1234567890), nonAdminCredentials) }
 
             // Then
             exception.status shouldBe HttpStatus.UNAUTHORIZED
             exception.message shouldBe "Unauthorized"
         }
 
-        "should not book a ticket if already booked" {
-            val showDate = LocalDate.now().plusDays(1).toString()
-            val startTime = LocalDateTime.now().plusDays(1).toString()
+        "should throw exception when trying to book ticket after 7 days from now" {
+            // Given
+            val showDate = LocalDate.now().plusDays(8).toString()
+            val startTime = LocalDateTime.now().plusDays(8).toString()
             createUser(adminCredentials)
             createNewMovie(newMovieRequest(120), adminCredentials)
             createNewShowWithBasicAuth(newShowRequest(showDate, startTime), adminCredentials)
 
-            val ticketRequest = createTicketRequest(1, 1, 1234567890)
             // When
-            bookTicketWithAuth(ticketRequest, adminCredentials)
+            val ticketRequest = createTicketRequest(1, 1234567890)
             val exception =
                 shouldThrow<HttpClientResponseException> { bookTicketWithAuth(ticketRequest, adminCredentials) }
+
+            // Then
             exception.status shouldBe HttpStatus.BAD_REQUEST
-            exception.message shouldBe "Ticket is already booked"
+            exception.message shouldBe "Tickets can only be reserved for the next 7 days"
         }
     }
 
-    private fun createTicketRequest(showId: Int, seatNo: Int, phoneNo: Int) = TicketRequest(showId, seatNo, phoneNo)
+    private fun createTicketRequest(showId: Int, phoneNo: Int) = TicketRequest(showId, phoneNo)
 
     private fun bookTicketWithAuth(ticketRequest: TicketRequest, credentials: UserCredentialsRequest) =
         httpClient.postWithBasicAuth(
