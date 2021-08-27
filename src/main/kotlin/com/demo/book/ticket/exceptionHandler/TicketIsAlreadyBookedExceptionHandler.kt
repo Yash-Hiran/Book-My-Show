@@ -1,7 +1,6 @@
 package com.demo.book.ticket.exceptionHandler
 
 import com.demo.ApiError
-import com.demo.book.movie.exception.InvalidMovieDetailsException
 import com.demo.book.ticket.exception.TicketIsAlreadyBookedException
 import io.micronaut.context.annotation.Requirements
 import io.micronaut.context.annotation.Requires
@@ -16,8 +15,8 @@ import javax.inject.Singleton
 @Requirements(
     Requires(classes = [TicketIsAlreadyBookedException::class, ExceptionHandler::class])
 )
-class TicketIsAlreadyBookedExceptionHandler:ExceptionHandler<TicketIsAlreadyBookedException,HttpResponse<ApiError>> {
+class TicketIsAlreadyBookedExceptionHandler : ExceptionHandler<TicketIsAlreadyBookedException, HttpResponse<ApiError>> {
     override fun handle(request: HttpRequest<*>?, exception: TicketIsAlreadyBookedException): HttpResponse<ApiError> {
-        return HttpResponse.badRequest<ApiError>(ApiError(exception.code,"Ticket is already booked"))
+        return HttpResponse.badRequest(ApiError(exception.code, "Ticket is already booked"))
     }
 }
