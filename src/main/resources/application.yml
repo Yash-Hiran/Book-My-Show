@@ -8,7 +8,7 @@ micronaut:
     client:
       read-timeout: 60
   security:
-    enabled: false
+    enabled: true
 
 datasources:
   default:

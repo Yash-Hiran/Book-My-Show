@@ -4,15 +4,14 @@ import com.demo.book.movie.entity.Movie
 import com.demo.book.movie.request.CreateMovieRequest
 import com.demo.book.movie.service.MovieService
 import io.micronaut.http.HttpResponse
-import io.micronaut.http.annotation.Body
-import io.micronaut.http.annotation.Controller
-import io.micronaut.http.annotation.Get
-import io.micronaut.http.annotation.Post
+import io.micronaut.http.annotation.*
+import io.micronaut.security.annotation.Secured
+import io.micronaut.security.rules.SecurityRule
 import javax.inject.Inject
 
 @Controller
-class MovieApi(@Inject val movieService: MovieService) {
-
+@Secured(SecurityRule.IS_AUTHENTICATED)
+class MovieApi(@Inject private val movieService: MovieService) {
     @Get("/movies")
     fun allMovies(): HttpResponse<List<Movie>> {
         return HttpResponse.ok(movieService.allMovies())

@@ -1,6 +1,6 @@
-micronaut:
-  security:
-    enabled: false
-    token:
-      jwt:
-        enabled: false
+#micronaut:
+#  security:
+#    intercept-url-map:
+#      pattern: /*
+#        access:
+#          - isAuthenticated()
