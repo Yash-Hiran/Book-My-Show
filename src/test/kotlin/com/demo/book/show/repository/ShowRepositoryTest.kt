@@ -32,11 +32,11 @@ class ShowRepositoryTest(@Inject override var dataSource: DataSource) : BookingI
             showRepository.save(show, LocalDateTime.of(2021, 9, 25, 16, 0, 0))
 
             // when
-             val r = showRepository.updatePrice(1, 100)
+            showRepository.updatePrice(1, 100)
             val result = showRepository.getShowById(1)
 
             // then
-            r shouldBe 100
+            result.price shouldBe 100
         }
 
         "should save and return the saved show" {

@@ -19,8 +19,8 @@ class ShowRepository(@Inject private val datasource: DataSource) {
         UpdatePriceOfShowsCommand().command(
             connection,
             UpdatePriceOfShowsParams(
-                showId,
-                price
+                price,
+                showId
             )
         )
     }
