@@ -1,5 +1,6 @@
 package com.demo.book.movie.exceptionhandler
 
+import com.demo.ApiError
 import com.demo.book.movie.exception.InvalidMovieDetailsException
 import io.micronaut.context.annotation.Requirements
 import io.micronaut.context.annotation.Requires
@@ -19,5 +20,3 @@ class InvalidMovieDurationExceptionHandler : ExceptionHandler<InvalidMovieDetail
         return HttpResponse.badRequest(ApiError(exception.errorCode, exception.message))
     }
 }
-
-data class ApiError(val code: String, val message: String)
