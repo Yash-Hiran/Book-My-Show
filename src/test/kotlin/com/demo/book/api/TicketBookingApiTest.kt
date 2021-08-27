@@ -2,9 +2,7 @@ package com.demo.book.api
 
 import com.demo.authentication.userCredentials.request.UserCredentialsRequest
 import com.demo.book.BookingIntegrationSpec
-import com.demo.book.ticket.entity.Ticket
 import com.demo.book.ticket.request.TicketRequest
-import com.demo.utils.getWithBasicAuth
 import com.demo.utils.postWithBasicAuth
 import io.kotest.matchers.shouldBe
 import io.micronaut.http.HttpStatus

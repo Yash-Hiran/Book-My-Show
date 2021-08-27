@@ -11,13 +11,13 @@ import javax.sql.DataSource
 
 @Singleton
 class TicketBookingRepository(@Inject private val dataSource: DataSource) {
-    fun saveTicket(ticketRequest: TicketRequest): Ticket = dataSource.connection.use { connection ->
+    fun saveTicket(ticketRequest: TicketRequest) = dataSource.connection.use { connection ->
         run {
             val ticketResult = SaveTicketQuery().query(
                 connection,
                 SaveTicketParams(ticketRequest.showId, ticketRequest.seatNo, ticketRequest.phoneNo)
-            ).first()
-            return Ticket(
+            )[0]
+            Ticket(
                 ticketId = ticketResult.ticketid,
                 showId = ticketResult.showid,
                 seatNo = ticketResult.seatno,
