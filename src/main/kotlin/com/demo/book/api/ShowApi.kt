@@ -17,8 +17,8 @@ import javax.inject.Inject
 class ShowApi(@Inject val showService: ShowService) {
 
     @Get("/shows")
-    fun allShows(): HttpResponse<List<Show>> {
-            return HttpResponse.ok(showService.allShows())
+    fun allShowsByOrder(): HttpResponse<Map<String, List<Show>>> {
+        return HttpResponse.ok(showService.allShowsByOrder())
     }
 
     @Post("/shows")
