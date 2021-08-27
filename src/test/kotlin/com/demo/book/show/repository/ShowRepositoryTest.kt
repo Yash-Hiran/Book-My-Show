@@ -39,6 +39,27 @@ class ShowRepositoryTest(@Inject override var dataSource: DataSource) : BookingI
             result.price shouldBe 100
         }
 
+        "should return a show" {
+            // given
+            val startTime = "2021-09-25T15:50:00"
+            val movie = newMovieRequest(10)
+            movieRepository.save(movie)
+            val show = newShowRequest("2021-09-25", startTime)
+            showRepository.save(show, LocalDateTime.of(2021, 9, 25, 16, 0, 0))
+
+            // when
+            val result = showRepository.getShowById(1)
+
+            // then
+            result shouldBe Show(
+                1,
+                1,
+                LocalDate.of(2021, 9, 25),
+                LocalDateTime.of(2021, 9, 25, 15, 50, 0),
+                LocalDateTime.of(2021, 9, 25, 16, 0, 0)
+            )
+        }
+
         "should save and return the saved show" {
             // given
             val startTime = "2021-09-25T15:50:00"

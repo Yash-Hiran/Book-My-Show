@@ -61,4 +61,8 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
 
     private fun validateShowStartTime(showStartTime: LocalDateTime) =
         showStartTime < LocalDateTime.now()
+
+    fun updatePrice(showId: Int, price: Int) {
+    showRepository.updatePrice(showId,price)
+    }
 }
