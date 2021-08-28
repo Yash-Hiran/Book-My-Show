@@ -284,7 +284,7 @@ class ShowServiceTest : StringSpec({
         isOverlap shouldBe false
     }
 
-    "should update the price of a show when show id is passed"{
+    "should update the price of a show when show id is passed" {
         val showRequest =
             CreateShowRequest(
                 1,
