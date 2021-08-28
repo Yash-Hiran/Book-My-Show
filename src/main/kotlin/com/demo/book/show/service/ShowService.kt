@@ -63,6 +63,9 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
         showStartTime < LocalDateTime.now()
 
     fun updatePrice(showId: Int, price: Int) {
-    showRepository.updatePrice(showId,price)
+        showRepository.updatePrice(showId, price)
     }
+
+    fun showById(showId: Int) =
+        showRepository.getShowById(showId)
 }
