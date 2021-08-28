@@ -65,4 +65,7 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
     fun updatePrice(showId: Int, price: Int) {
         showRepository.updatePrice(showId, price)
     }
+
+    fun showById(showId: Int) =
+        showRepository.getShowById(showId)
 }
