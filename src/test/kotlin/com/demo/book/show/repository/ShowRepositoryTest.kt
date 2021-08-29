@@ -39,7 +39,7 @@ class ShowRepositoryTest(@Inject override var dataSource: DataSource) : BookingI
             result.price shouldBe 100
         }
 
-        "should return a show" {
+        "should return a show by Id" {
             // given
             val startTime = "2021-09-25T15:50:00"
             val movie = newMovieRequest(10)
