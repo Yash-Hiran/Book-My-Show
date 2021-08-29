@@ -309,4 +309,38 @@ class ShowServiceTest : StringSpec({
         showService.updatePrice(1, 100)
         verify(exactly = 1) { showRepositoryMock.updatePrice(1, 100) }
     }
+
+    "Should return the show by Id" {
+        val showRequest =
+            CreateShowRequest(
+                1,
+                LocalDate.parse("2021-10-10"),
+                LocalDateTime.parse("2021-10-10T12:30:00")
+            )
+        val movie = Movie(1, "Bird Box", 30)
+        every { movieRepositoryMock.getMovieWithId(any()) }.returns(listOf(Movie(1, "Bird Box", 30)))
+        val endTime = showService.getEndTime(showRequest, movie)
+        every { showRepositoryMock.save(showRequest, endTime) }.returns(
+            Show(
+                1,
+                1,
+                LocalDate.parse("2021-10-10"),
+                LocalDateTime.parse("2021-10-10T12:30:00"),
+                LocalDateTime.parse("2021-10-10T13:00:00")
+            )
+        )
+        every { showRepositoryMock.findAll() }.returns(listOf())
+        every { showRepositoryMock.getShowById(any()) }.returns(
+            Show(
+                1,
+                1,
+                LocalDate.parse("2021-10-10"),
+                LocalDateTime.parse("2021-10-10T12:30:00"),
+                LocalDateTime.parse("2021-10-10T13:00:00")
+            )
+        )
+        showService.save(showRequest)
+        showService.showById(1)
+        verify(exactly = 1) { showRepositoryMock.getShowById(1) }
+    }
 })
