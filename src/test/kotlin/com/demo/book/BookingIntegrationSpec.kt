@@ -71,7 +71,7 @@ abstract class BookingIntegrationSpec : IntegrationSpec() {
     )
 
     protected fun getAvailableShowsWithAuth(userCredentialsRequest: UserCredentialsRequest) =
-        httpClient.getWithBasicAuth<List<Int>>("/shows/1", userCredentialsRequest)
+        httpClient.getWithBasicAuth<List<Int>>("/shows/1/seats", userCredentialsRequest)
 
     protected fun createNewMovie(
         avengersMovie: CreateMovieRequest,
