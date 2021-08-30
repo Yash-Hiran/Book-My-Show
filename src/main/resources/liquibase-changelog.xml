@@ -13,6 +13,7 @@
     <include file="changelog/0.0.6-add-admin-user.sql" relativeToChangelogFile="true"/>
     <include file="changelog/0.0.8-create-show-table.sql" relativeToChangelogFile="true"/>
     <include file="changelog/0.0.9-insert-show.sql" relativeToChangelogFile="true"/>
-    <include file="changelog/0.1.0-create-ticket-table.sql" relativeToChangelogFile="true"/>
-    <include file="changelog/0.1.1-add-capacity-to-shows.sql" relativeToChangelogFile="true"/>
+    <include file="changelog/0.1.0-add-column-price-in-show.sql" relativeToChangelogFile="true"/>
+    <include file="changelog/0.1.1-create-ticket-table.sql" relativeToChangelogFile="true"/>
+    <include file="changelog/0.1.2-add-capacity-column-in-show-table.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>

@@ -11,17 +11,17 @@ import norm.ParamSetter
 import norm.Query
 import norm.RowMapper
 
-public data class GetShowByIdParams(
+public data class GetShowByShowidParams(
   public val showId: Int?
 )
 
-public class GetShowByIdParamSetter : ParamSetter<GetShowByIdParams> {
-  public override fun map(ps: PreparedStatement, params: GetShowByIdParams): Unit {
+public class GetShowByShowidParamSetter : ParamSetter<GetShowByShowidParams> {
+  public override fun map(ps: PreparedStatement, params: GetShowByShowidParams): Unit {
     ps.setObject(1, params.showId)
   }
 }
 
-public data class GetShowByIdResult(
+public data class GetShowByShowidResult(
   public val id: Int,
   public val movieId: Int,
   public val showDate: Date,
@@ -31,8 +31,8 @@ public data class GetShowByIdResult(
   public val price: Int
 )
 
-public class GetShowByIdRowMapper : RowMapper<GetShowByIdResult> {
-  public override fun map(rs: ResultSet): GetShowByIdResult = GetShowByIdResult(
+public class GetShowByShowidRowMapper : RowMapper<GetShowByShowidResult> {
+  public override fun map(rs: ResultSet): GetShowByShowidResult = GetShowByShowidResult(
   id = rs.getObject("id") as kotlin.Int,
     movieId = rs.getObject("movie_id") as kotlin.Int,
     showDate = rs.getObject("show_date") as java.sql.Date,
@@ -42,13 +42,12 @@ public class GetShowByIdRowMapper : RowMapper<GetShowByIdResult> {
     price = rs.getObject("price") as kotlin.Int)
 }
 
-public class GetShowByIdQuery : Query<GetShowByIdParams, GetShowByIdResult> {
+public class GetShowByShowidQuery : Query<GetShowByShowidParams, GetShowByShowidResult> {
   public override val sql: String = """
-      |SELECT * FROM shows
-      |WHERE id=?;
+      |select * from shows where id=?
       |""".trimMargin()
 
-  public override val mapper: RowMapper<GetShowByIdResult> = GetShowByIdRowMapper()
+  public override val mapper: RowMapper<GetShowByShowidResult> = GetShowByShowidRowMapper()
 
-  public override val paramSetter: ParamSetter<GetShowByIdParams> = GetShowByIdParamSetter()
+  public override val paramSetter: ParamSetter<GetShowByShowidParams> = GetShowByShowidParamSetter()
 }
