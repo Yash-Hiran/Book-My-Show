@@ -64,10 +64,11 @@ abstract class BookingIntegrationSpec : IntegrationSpec() {
     protected fun getAllShowsWithAuth(userCredentialsRequest: UserCredentialsRequest) =
         httpClient.getWithBasicAuth<List<Show>>("/shows", userCredentialsRequest)
 
-    protected fun newShowRequest(startDate: String, startTime: String) = CreateShowRequest(
+    protected fun newShowRequest(startDate: String, startTime: String, capacity: Int = 100) = CreateShowRequest(
         1,
         LocalDate.parse(startDate),
-        LocalDateTime.parse(startTime)
+        LocalDateTime.parse(startTime),
+        capacity
     )
 
     protected fun createNewMovie(

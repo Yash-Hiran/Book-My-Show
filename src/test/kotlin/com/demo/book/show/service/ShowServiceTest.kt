@@ -29,7 +29,8 @@ class ShowServiceTest : StringSpec({
             CreateShowRequest(
                 1,
                 LocalDate.parse("2021-10-10"),
-                LocalDateTime.parse("2021-10-10T12:30:00")
+                LocalDateTime.parse("2021-10-10T12:30:00"),
+                100
             )
 
         val movie = Movie(1, "Bird Box", 30)
@@ -41,7 +42,8 @@ class ShowServiceTest : StringSpec({
                 1,
                 LocalDate.parse("2021-10-10"),
                 LocalDateTime.parse("2021-10-10T12:30:00"),
-                LocalDateTime.parse("2021-10-10T13:00:00")
+                LocalDateTime.parse("2021-10-10T13:00:00"),
+                100
             )
         )
         every { showRepositoryMock.findAll() }.returns(listOf())
@@ -55,7 +57,8 @@ class ShowServiceTest : StringSpec({
             listOf(
                 Show(
                     1, 4, LocalDate.parse("2021-10-10"),
-                    LocalDateTime.parse("2021-10-10T15:00:00"), LocalDateTime.parse("2021-10-10T15:40:00")
+                    LocalDateTime.parse("2021-10-10T15:00:00"), LocalDateTime.parse("2021-10-10T15:40:00"),
+                    100
                 )
             )
         )
@@ -63,7 +66,8 @@ class ShowServiceTest : StringSpec({
         showService.allShows() shouldBe listOf(
             Show(
                 1, 4, LocalDate.parse("2021-10-10"),
-                LocalDateTime.parse("2021-10-10T15:00:00"), LocalDateTime.parse("2021-10-10T15:40:00")
+                LocalDateTime.parse("2021-10-10T15:00:00"), LocalDateTime.parse("2021-10-10T15:40:00"),
+                100
             )
         )
     }
@@ -76,7 +80,7 @@ class ShowServiceTest : StringSpec({
     "should throw an exception if show is overlapping" {
 
         val createShowRequest =
-            CreateShowRequest(1, LocalDate.parse("2021-10-10"), LocalDateTime.parse("2021-10-10T12:30:00"))
+            CreateShowRequest(1, LocalDate.parse("2021-10-10"), LocalDateTime.parse("2021-10-10T12:30:00"), 100)
         every { movieRepositoryMock.getMovieWithId(any()) }.returns(listOf(Movie(1, "harry potter", 30)))
         val movie = movieService.getMovieWithId(createShowRequest.movieId)
         val endTime = showService.getEndTime(createShowRequest, movie)
@@ -87,7 +91,8 @@ class ShowServiceTest : StringSpec({
                 1,
                 LocalDate.parse("2021-10-10"),
                 LocalDateTime.parse("2021-10-10T12:30:00"),
-                LocalDateTime.parse("2021-10-10T13:00:00")
+                LocalDateTime.parse("2021-10-10T13:00:00"),
+                100
             )
         )
 
@@ -98,12 +103,13 @@ class ShowServiceTest : StringSpec({
                     1,
                     LocalDate.parse("2021-10-10"),
                     LocalDateTime.parse("2021-10-10T12:30:00"),
-                    LocalDateTime.parse("2021-10-10T13:00:00")
+                    LocalDateTime.parse("2021-10-10T13:00:00"),
+                    100
                 )
             )
         )
         val createSecondShowRequest =
-            CreateShowRequest(1, LocalDate.parse("2021-10-10"), LocalDateTime.parse("2021-10-10T12:30:00"))
+            CreateShowRequest(1, LocalDate.parse("2021-10-10"), LocalDateTime.parse("2021-10-10T12:30:00"), 100)
         val exception = shouldThrow<InvalidShowDetailsException> { showService.save(createSecondShowRequest) }
         exception.message shouldBe "Already have a show scheduled during that time"
     }
@@ -111,7 +117,7 @@ class ShowServiceTest : StringSpec({
     "should throw an exception if movie does not exist and we try to save a show for that movie" {
         every { movieRepositoryMock.getMovieWithId(any()) }.returns(listOf())
         val createShowRequest =
-            CreateShowRequest(1, LocalDate.parse("2021-10-10"), LocalDateTime.parse("2021-10-10T12:30:00"))
+            CreateShowRequest(1, LocalDate.parse("2021-10-10"), LocalDateTime.parse("2021-10-10T12:30:00"), 100)
         val exception = shouldThrow<InvalidMovieDetailsException> { showService.save(createShowRequest) }
         exception.message shouldBe "Movie Id does not exist"
     }
@@ -119,7 +125,7 @@ class ShowServiceTest : StringSpec({
     "should throw an exception if show time is invalid" {
         every { movieRepositoryMock.getMovieWithId(any()) }.returns(listOf(Movie(1, "harry potter", 30)))
         val createShowRequest =
-            CreateShowRequest(1, LocalDate.parse("2020-10-10"), LocalDateTime.parse("2020-10-10T12:30:00"))
+            CreateShowRequest(1, LocalDate.parse("2020-10-10"), LocalDateTime.parse("2020-10-10T12:30:00"), 100)
         val exception = shouldThrow<InvalidShowDetailsException> { showService.save(createShowRequest) }
         exception.message shouldBe "Can not schedule a show for past show time"
     }
@@ -127,7 +133,7 @@ class ShowServiceTest : StringSpec({
     "should throw an exception if show start date and start time does not match" {
         every { movieRepositoryMock.getMovieWithId(any()) }.returns(listOf(Movie(1, "harry potter", 30)))
         val createShowRequest =
-            CreateShowRequest(1, LocalDate.parse("2021-10-10"), LocalDateTime.parse("2021-10-12T12:30:00"))
+            CreateShowRequest(1, LocalDate.parse("2021-10-10"), LocalDateTime.parse("2021-10-12T12:30:00"), 100)
         val exception = shouldThrow<InvalidShowDetailsException> { showService.save(createShowRequest) }
         exception.message shouldBe "Show date and start time date does not match"
     }

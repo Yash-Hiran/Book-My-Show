@@ -1,4 +1,4 @@
-CREATE TABLE tickets (
+CREATE TABLE IF NOT EXISTS tickets (
     ticketId SERIAL PRIMARY KEY,
     showId INTEGER NOT NULL,
     seatNo INTEGER NOT NULL,
