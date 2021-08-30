@@ -117,7 +117,7 @@ class ShowRepository(@Inject private val datasource: DataSource) {
         GetShowCapacityQuery().query(
             connection,
             GetShowCapacityParams(id)
-        ).first()
+        )
     }
 
     fun getBookedSeatsOfAShow(showId: Int) = datasource.connection.use{ connection ->

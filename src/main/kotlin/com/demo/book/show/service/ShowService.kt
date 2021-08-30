@@ -57,17 +57,19 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
 
 
     fun getAvailableSeatsOfAShow(showId: Int): MutableList<Int> {
-        //TODO exception
 
-        val showCapacity = showRepository.getAvailableSeatsOfAShow(showId).capacity
-        val bookedSeats = showRepository.getBookedSeatsOfAShow(showId)
-
+        val showCapacityResult = showRepository.getAvailableSeatsOfAShow(showId)
+        if(showCapacityResult.isEmpty())
+            throw InvalidShowDetailsException("Show Id does not exist")
+        val showCapacity = showCapacityResult.first().capacity
+        val bookedSeatsList = getBookedSeats(showId)
         val availableSeatsList = mutableListOf<Int>()
-        for (seatNumber in 1..showCapacity){
-
-            availableSeatsList.add(seatNumber)
+        for (seatNumber in 1..showCapacity) {
+            if (!bookedSeatsList.contains(seatNumber))
+                availableSeatsList.add(seatNumber)
         }
-
+        if(availableSeatsList.isEmpty())
+            throw InvalidShowDetailsException("Show Capacity Full")
         return availableSeatsList
     }
 
@@ -76,4 +78,14 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
 
     private fun validateShowStartTime(showStartTime: LocalDateTime) =
         showStartTime < LocalDateTime.now()
+
+    private fun getBookedSeats(showId: Int): MutableList<Int> {
+        val bookedSeats = showRepository.getBookedSeatsOfAShow(showId)
+        val bookedSeatsList = mutableListOf<Int>()
+        for (seatNumber in bookedSeats) {
+            bookedSeatsList.add(seatNumber.seatno)
+        }
+        return bookedSeatsList
+    }
+
 }

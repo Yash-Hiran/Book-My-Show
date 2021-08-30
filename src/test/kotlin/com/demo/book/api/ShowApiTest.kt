@@ -99,5 +99,10 @@ class ShowApiTest : BookingIntegrationSpec() {
             exception.status shouldBe HttpStatus.UNAUTHORIZED
             exception.message shouldBe "Unauthorized"
         }
+
+
+
+
+
     }
 }

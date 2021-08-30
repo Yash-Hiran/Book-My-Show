@@ -16,6 +16,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import show.GetShowCapacityParams
 import show.GetShowCapacityResult
+import ticket.GetBookedSeatsResult
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -285,12 +286,44 @@ class ShowServiceTest : StringSpec({
         isOverlap shouldBe false
     }
 
-    "should return all seats when no ticket is booked" {
-        every { showRepositoryMock.getAvailableSeatsOfAShow(any())}.returns(GetShowCapacityResult(
-            5
-        ))
+    "should return available number of seats for a show" {
+        every { showRepositoryMock.getAvailableSeatsOfAShow(any()) }.returns(
+            listOf(
+                GetShowCapacityResult(5)
+            )
+        )
+        every { showRepositoryMock.getBookedSeatsOfAShow(any()) }.returns(
+            listOf(
+                GetBookedSeatsResult(1),
+                GetBookedSeatsResult(4)
+            )
+        )
 
         val availableSeatsList = showService.getAvailableSeatsOfAShow(1)
-        availableSeatsList shouldBe listOf<Int>(1,2,3,4,5)
+        availableSeatsList shouldBe listOf<Int>(2, 3, 5)
+    }
+    "should return empty list when no seats are available" {
+        every { showRepositoryMock.getAvailableSeatsOfAShow(any()) }.returns(
+            listOf(
+                GetShowCapacityResult(3)
+            )
+        )
+        every { showRepositoryMock.getBookedSeatsOfAShow(any()) }.returns(
+            listOf(
+                GetBookedSeatsResult(1),
+                GetBookedSeatsResult(2),
+                GetBookedSeatsResult(3)
+            )
+        )
+
+        val exception = shouldThrow<InvalidShowDetailsException> { showService.getAvailableSeatsOfAShow(1) }
+        exception.message shouldBe "Show Capacity Full"
+
+    }
+    "should throw an exception if show id does not exist"{
+        every { showRepositoryMock.getAvailableSeatsOfAShow(any()) }.returns(listOf())
+        val exception = shouldThrow<InvalidShowDetailsException> { showService.getAvailableSeatsOfAShow(1) }
+        exception.message shouldBe "Show Id does not exist"
+
     }
 })
