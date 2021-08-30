@@ -46,7 +46,8 @@ class TicketBookingRepository(@Inject private val dataSource: DataSource) {
                 show.movieId,
                 show.showDate.toLocalDate(),
                 show.startTime.toLocalDateTime(),
-                show.endTime.toLocalDateTime()
+                show.endTime.toLocalDateTime(),
+                show.capacity
             )
         }
     }

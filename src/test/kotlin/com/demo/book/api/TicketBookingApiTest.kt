@@ -24,13 +24,13 @@ class TicketBookingApiTest : BookingIntegrationSpec() {
         val adminCredentials = UserCredentialsRequest("abc", "def")
         val nonAdminCredentials = UserCredentialsRequest("uvw", "xyz")
 
-        "should save a ticket with admin credentials within 7 days" {
+        "should save a ticket with admin credentials for show within next 7 days" {
             // Given
             val showDate = LocalDate.now().plusDays(1).toString()
             val startTime = LocalDateTime.now().plusDays(1).toString()
             createUser(adminCredentials)
             createNewMovie(newMovieRequest(120), adminCredentials)
-            createNewShowWithBasicAuth(newShowRequest(showDate, startTime), adminCredentials)
+            createNewShowWithBasicAuth(newShowRequest(showDate, startTime, 100), adminCredentials)
 
             // When
             val response = bookTicketWithAuth(createTicketRequest(1, 1234567890), adminCredentials)
@@ -73,6 +73,24 @@ class TicketBookingApiTest : BookingIntegrationSpec() {
             // Then
             exception.status shouldBe HttpStatus.BAD_REQUEST
             exception.message shouldBe "Tickets can only be reserved for the next 7 days"
+        }
+
+        "should throw exception when trying to book ticket when no tickets are available" {
+            // Given
+            val showDate = LocalDate.now().plusDays(4).toString()
+            val startTime = LocalDateTime.now().plusDays(4).toString()
+            createUser(adminCredentials)
+            createNewMovie(newMovieRequest(120), adminCredentials)
+            createNewShowWithBasicAuth(newShowRequest(showDate, startTime, 0), adminCredentials)
+
+            // When
+            val ticketRequest = createTicketRequest(1, 1234567890)
+            val exception =
+                shouldThrow<HttpClientResponseException> { bookTicketWithAuth(ticketRequest, adminCredentials) }
+
+            // Then
+            exception.status shouldBe HttpStatus.BAD_REQUEST
+            exception.message shouldBe "No tickets are available for this show"
         }
     }
 
