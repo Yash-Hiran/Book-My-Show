@@ -14,6 +14,7 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import norm.CommandResult
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -281,5 +282,76 @@ class ShowServiceTest : StringSpec({
         val endTime = showService.getEndTime(showRequest, movie)
         val isOverlap = showService.checkOverlapOfShows(showRequest.startTime, endTime)
         isOverlap shouldBe false
+    }
+
+    "should update the price of a show when show id is passed and price is zero" {
+
+        every { showRepositoryMock.getShowById(any()) }.returns(
+            Show(
+                1,
+                1,
+                LocalDate.parse("2021-10-10"),
+                LocalDateTime.parse("2021-10-10T12:30:00"),
+                LocalDateTime.parse("2021-10-10T13:00:00")
+            )
+        )
+        every { showRepositoryMock.updatePrice(any(), any()) }.returns(CommandResult(1))
+        showService.updatePrice(1, 100)
+        verify(exactly = 1) { showRepositoryMock.updatePrice(1, 100) }
+    }
+
+    "should throw an exception when admin update the non-zero price of show" {
+
+        every { showRepositoryMock.updatePrice(any(), any()) }.returns(CommandResult(1))
+        every { showRepositoryMock.getShowById(any()) }.returns(
+            Show(
+                1,
+                1,
+                LocalDate.parse("2021-10-10"),
+                LocalDateTime.parse("2021-10-10T12:30:00"),
+                LocalDateTime.parse("2021-10-10T13:00:00"),
+                200
+            )
+        )
+        val exception = shouldThrow<InvalidShowDetailsException> { showService.updatePrice(1, 100) }
+        exception.message shouldBe "Show price already defined"
+    }
+
+    "should throw an exception when admin update the price of show less than 1" {
+
+        every { showRepositoryMock.updatePrice(any(), any()) }.returns(CommandResult(1))
+        every { showRepositoryMock.getShowById(any()) }.returns(
+            Show(
+                1,
+                1,
+                LocalDate.parse("2021-10-10"),
+                LocalDateTime.parse("2021-10-10T12:30:00"),
+                LocalDateTime.parse("2021-10-10T13:00:00"),
+                0
+            )
+        )
+        val exception = shouldThrow<InvalidShowDetailsException> { showService.updatePrice(1, -100) }
+        exception.message shouldBe "Price cannot be less than 1"
+    }
+
+    "Should return the show by Id" {
+
+        every { showRepositoryMock.getShowById(any()) }.returns(
+            Show(
+                1,
+                1,
+                LocalDate.parse("2021-10-10"),
+                LocalDateTime.parse("2021-10-10T12:30:00"),
+                LocalDateTime.parse("2021-10-10T13:00:00")
+            )
+        )
+        val result = showService.getShowById(1)
+        result shouldBe Show(
+            1,
+            1,
+            LocalDate.parse("2021-10-10"),
+            LocalDateTime.parse("2021-10-10T12:30:00"),
+            LocalDateTime.parse("2021-10-10T13:00:00")
+        )
     }
 })

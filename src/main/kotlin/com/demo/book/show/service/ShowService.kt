@@ -61,4 +61,18 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
 
     private fun validateShowStartTime(showStartTime: LocalDateTime) =
         showStartTime < LocalDateTime.now()
+
+    fun updatePrice(showId: Int, price: Int) {
+        val show = getShowById(showId)
+        if (price <= 0) {
+            throw InvalidShowDetailsException("Price cannot be less than 1")
+        }
+        if (show.price == 0)
+            showRepository.updatePrice(showId, price)
+        else
+            throw InvalidShowDetailsException("Show price already defined")
+    }
+
+    fun getShowById(showId: Int) =
+        showRepository.getShowById(showId)
 }

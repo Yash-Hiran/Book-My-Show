@@ -4,6 +4,18 @@ import com.demo.authentication.userCredentials.request.UserCredentialsRequest
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.client.HttpClient
 
+inline fun <reified T> HttpClient.putWithBasicAuth(
+    url: String,
+    body: T,
+    userCredentialsRequest: UserCredentialsRequest
+) = toBlocking().exchange(
+    HttpRequest.PUT(url, body).basicAuth(
+        userCredentialsRequest.username,
+        userCredentialsRequest.password
+    ),
+    T::class.java
+)
+
 inline fun <reified T> HttpClient.getWithBasicAuth(
     url: String,
     userCredentialsRequest: UserCredentialsRequest
