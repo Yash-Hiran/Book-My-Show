@@ -51,4 +51,16 @@ class TicketBookingRepository(@Inject private val dataSource: DataSource) {
             )
         }
     }
+
+    fun getTicketById(ticketId: Int) = dataSource.connection.use { connection ->
+        run {
+            val ticketResult = GetTicketByIdQuery().query(connection, GetTicketByIdParams(ticketId))[0]
+            Ticket(
+                ticketId = ticketResult.ticketid,
+                showId = ticketResult.showid,
+                seatNo = ticketResult.seatno,
+                phoneNo = ticketResult.phoneno
+            )
+        }
+    }
 }

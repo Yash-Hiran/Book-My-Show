@@ -56,42 +56,6 @@ class TicketBookingApiTest : BookingIntegrationSpec() {
             exception.status shouldBe HttpStatus.UNAUTHORIZED
             exception.message shouldBe "Unauthorized"
         }
-
-        "should throw exception when trying to book ticket after 7 days from now" {
-            // Given
-            val showDate = LocalDate.now().plusDays(8).toString()
-            val startTime = LocalDateTime.now().plusDays(8).toString()
-            createUser(adminCredentials)
-            createNewMovie(newMovieRequest(120), adminCredentials)
-            createNewShowWithBasicAuth(newShowRequest(showDate, startTime), adminCredentials)
-
-            // When
-            val ticketRequest = createTicketRequest(1, 1234567890)
-            val exception =
-                shouldThrow<HttpClientResponseException> { bookTicketWithAuth(ticketRequest, adminCredentials) }
-
-            // Then
-            exception.status shouldBe HttpStatus.BAD_REQUEST
-            exception.message shouldBe "Tickets can only be reserved for the next 7 days"
-        }
-
-        "should throw exception when trying to book ticket when no tickets are available" {
-            // Given
-            val showDate = LocalDate.now().plusDays(4).toString()
-            val startTime = LocalDateTime.now().plusDays(4).toString()
-            createUser(adminCredentials)
-            createNewMovie(newMovieRequest(120), adminCredentials)
-            createNewShowWithBasicAuth(newShowRequest(showDate, startTime, 0), adminCredentials)
-
-            // When
-            val ticketRequest = createTicketRequest(1, 1234567890)
-            val exception =
-                shouldThrow<HttpClientResponseException> { bookTicketWithAuth(ticketRequest, adminCredentials) }
-
-            // Then
-            exception.status shouldBe HttpStatus.BAD_REQUEST
-            exception.message shouldBe "No tickets are available for this show"
-        }
     }
 
     private fun createTicketRequest(showId: Int, phoneNo: Int) = TicketRequest(showId, phoneNo)
