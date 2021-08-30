@@ -1,6 +1,6 @@
 #micronaut:
 #  security:
 #    intercept-url-map:
-#      pattern: /*
+#      pattern: /api/*
 #        access:
 #          - isAuthenticated()

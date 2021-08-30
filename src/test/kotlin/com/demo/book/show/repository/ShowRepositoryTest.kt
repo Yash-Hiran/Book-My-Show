@@ -33,7 +33,7 @@ class ShowRepositoryTest(@Inject override var dataSource: DataSource) : BookingI
 
             // when
             showRepository.updatePrice(1, 100)
-            val result = showRepository.getShowById(1)
+            val result = showRepository.getShowById(1).first()
 
             // then
             result.price shouldBe 100
@@ -51,13 +51,15 @@ class ShowRepositoryTest(@Inject override var dataSource: DataSource) : BookingI
             val result = showRepository.getShowById(1)
 
             // then
-            result shouldBe Show(
-                1,
-                1,
-                LocalDate.of(2021, 9, 25),
-                LocalDateTime.of(2021, 9, 25, 15, 50, 0),
-                LocalDateTime.of(2021, 9, 25, 16, 0, 0),
-                100
+            result shouldBe listOf(
+                Show(
+                    1,
+                    1,
+                    LocalDate.of(2021, 9, 25),
+                    LocalDateTime.of(2021, 9, 25, 15, 50, 0),
+                    LocalDateTime.of(2021, 9, 25, 16, 0, 0),
+                    100
+                )
             )
         }
 
