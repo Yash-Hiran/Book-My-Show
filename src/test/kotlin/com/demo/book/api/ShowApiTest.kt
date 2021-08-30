@@ -184,6 +184,21 @@ class ShowApiTest : BookingIntegrationSpec() {
             // Then
             exception.message shouldBe "Price cannot be less than 1"
         }
+        "should throw an exception when show id does not exist" {
+            // Given
+            createUser(adminCredentials)
+            // When
+            val exception = shouldThrow<HttpClientResponseException> {
+                httpClient.putWithBasicAuth(
+                    "/shows/1/price/100",
+                    "",
+                    adminCredentials
+                )
+            }
+
+            // Then
+            exception.message shouldBe "Show Id does not exist"
+        }
 
         "should throw an exception when price is already defined" {
             // Given

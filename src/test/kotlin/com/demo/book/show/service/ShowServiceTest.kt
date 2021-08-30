@@ -350,13 +350,15 @@ class ShowServiceTest : StringSpec({
     "should update the price of a show when show id is passed and price is zero" {
 
         every { showRepositoryMock.getShowById(any()) }.returns(
-            Show(
-                1,
-                1,
-                LocalDate.parse("2021-10-10"),
-                LocalDateTime.parse("2021-10-10T12:30:00"),
-                LocalDateTime.parse("2021-10-10T13:00:00"),
-                100
+            listOf(
+                Show(
+                    1,
+                    1,
+                    LocalDate.parse("2021-10-10"),
+                    LocalDateTime.parse("2021-10-10T12:30:00"),
+                    LocalDateTime.parse("2021-10-10T13:00:00"),
+                    100
+                )
             )
         )
         every { showRepositoryMock.updatePrice(any(), any()) }.returns(CommandResult(1))
@@ -368,14 +370,16 @@ class ShowServiceTest : StringSpec({
 
         every { showRepositoryMock.updatePrice(any(), any()) }.returns(CommandResult(1))
         every { showRepositoryMock.getShowById(any()) }.returns(
-            Show(
-                1,
-                1,
-                LocalDate.parse("2021-10-10"),
-                LocalDateTime.parse("2021-10-10T12:30:00"),
-                LocalDateTime.parse("2021-10-10T13:00:00"),
-                10,
-                200
+            listOf(
+                Show(
+                    1,
+                    1,
+                    LocalDate.parse("2021-10-10"),
+                    LocalDateTime.parse("2021-10-10T12:30:00"),
+                    LocalDateTime.parse("2021-10-10T13:00:00"),
+                    10,
+                    200
+                )
             )
         )
         val exception = shouldThrow<InvalidShowDetailsException> { showService.updatePrice(1, 100) }
@@ -386,13 +390,15 @@ class ShowServiceTest : StringSpec({
 
         every { showRepositoryMock.updatePrice(any(), any()) }.returns(CommandResult(1))
         every { showRepositoryMock.getShowById(any()) }.returns(
-            Show(
-                1,
-                1,
-                LocalDate.parse("2021-10-10"),
-                LocalDateTime.parse("2021-10-10T12:30:00"),
-                LocalDateTime.parse("2021-10-10T13:00:00"),
-                0
+            listOf(
+                Show(
+                    1,
+                    1,
+                    LocalDate.parse("2021-10-10"),
+                    LocalDateTime.parse("2021-10-10T12:30:00"),
+                    LocalDateTime.parse("2021-10-10T13:00:00"),
+                    0
+                )
             )
         )
         val exception = shouldThrow<InvalidShowDetailsException> { showService.updatePrice(1, -100) }
@@ -402,13 +408,15 @@ class ShowServiceTest : StringSpec({
     "Should return the show by Id" {
 
         every { showRepositoryMock.getShowById(any()) }.returns(
-            Show(
-                1,
-                1,
-                LocalDate.parse("2021-10-10"),
-                LocalDateTime.parse("2021-10-10T12:30:00"),
-                LocalDateTime.parse("2021-10-10T13:00:00"),
-                100
+            listOf(
+                Show(
+                    1,
+                    1,
+                    LocalDate.parse("2021-10-10"),
+                    LocalDateTime.parse("2021-10-10T12:30:00"),
+                    LocalDateTime.parse("2021-10-10T13:00:00"),
+                    100
+                )
             )
         )
         val result = showService.getShowById(1)

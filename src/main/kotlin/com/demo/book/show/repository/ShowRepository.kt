@@ -27,7 +27,7 @@ class ShowRepository(@Inject private val datasource: DataSource) {
         )
     }
 
-    fun getShowById(showId: Int): Show = datasource.connection.use { connection ->
+    fun getShowById(showId: Int): List<Show> = datasource.connection.use { connection ->
         GetShowByShowidQuery().query(
             connection,
             GetShowByShowidParams(showId)
@@ -42,7 +42,7 @@ class ShowRepository(@Inject private val datasource: DataSource) {
             it.capacity,
             it.price
         )
-    }.first()
+    }
 
     fun save(showToSave: CreateShowRequest, endTime: LocalDateTime): Show = datasource.connection.use { connection ->
         SaveShowQuery().query(

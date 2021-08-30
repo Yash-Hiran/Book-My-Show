@@ -95,6 +95,10 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
             throw InvalidShowDetailsException("Show price already defined")
     }
 
-    fun getShowById(showId: Int) =
-        showRepository.getShowById(showId)
+    fun getShowById(showId: Int): Show {
+        val show = showRepository.getShowById(showId)
+        if (show.isEmpty())
+            throw InvalidShowDetailsException("Show Id does not exist")
+        return show.first()
+    }
 }
