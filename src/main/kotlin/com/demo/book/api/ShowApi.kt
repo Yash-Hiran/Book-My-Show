@@ -20,7 +20,7 @@ class ShowApi(@Inject val showService: ShowService) {
 
     @Get(uris = ["shows/{showId}"])
     fun getShow(showId: Int): HttpResponse<Show> {
-        return HttpResponse.ok(showService.showById(showId))
+        return HttpResponse.ok(showService.getShowById(showId))
     }
 
     @Post("/shows")

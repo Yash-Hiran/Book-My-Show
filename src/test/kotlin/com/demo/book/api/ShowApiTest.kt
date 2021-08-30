@@ -142,5 +142,45 @@ class ShowApiTest : BookingIntegrationSpec() {
             val savedShows = response.body.get()
             savedShows.price shouldBe 100
         }
+
+        "should throw an exception when price is less than 1" {
+            // Given
+            createUser(adminCredentials)
+            createNewMovie(newMovieRequest(100), adminCredentials)
+            createNewShowWithBasicAuth(newShowRequest("2021-09-25", "2021-09-25T15:50:00"), adminCredentials)
+
+            // When
+            val exception = shouldThrow<HttpClientResponseException> {
+                httpClient.putWithBasicAuth(
+                    "/shows/1/price/-100",
+                    "",
+                    adminCredentials
+                )
+            }
+
+            // Then
+            exception.message shouldBe "Price cannot be less than 1"
+        }
+
+        "should throw an exception when price is already defined" {
+
+            // Given
+            createUser(adminCredentials)
+            createNewMovie(newMovieRequest(100), adminCredentials)
+            createNewShowWithBasicAuth(newShowRequest("2021-09-25", "2021-09-25T15:50:00"), adminCredentials)
+
+            // When
+            httpClient.putWithBasicAuth("/shows/1/price/100", "", adminCredentials)
+            val exception = shouldThrow<HttpClientResponseException> {
+                httpClient.putWithBasicAuth(
+                    "/shows/1/price/200",
+                    "",
+                    adminCredentials
+                )
+            }
+
+            // Then
+            exception.message shouldBe "Show price already defined"
+        }
     }
 }
