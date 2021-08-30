@@ -14,7 +14,6 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import show.GetShowCapacityParams
 import show.GetShowCapacityResult
 import ticket.GetBookedSeatsResult
 import java.time.LocalDate
@@ -302,6 +301,7 @@ class ShowServiceTest : StringSpec({
         val availableSeatsList = showService.getAvailableSeatsOfAShow(1)
         availableSeatsList shouldBe listOf<Int>(2, 3, 5)
     }
+
     "should return empty list when no seats are available" {
         every { showRepositoryMock.getAvailableSeatsOfAShow(any()) }.returns(
             listOf(
@@ -318,12 +318,11 @@ class ShowServiceTest : StringSpec({
 
         val exception = shouldThrow<InvalidShowDetailsException> { showService.getAvailableSeatsOfAShow(1) }
         exception.message shouldBe "Show Capacity Full"
-
     }
-    "should throw an exception if show id does not exist"{
+
+    "should throw an exception if show id does not exist" {
         every { showRepositoryMock.getAvailableSeatsOfAShow(any()) }.returns(listOf())
         val exception = shouldThrow<InvalidShowDetailsException> { showService.getAvailableSeatsOfAShow(1) }
         exception.message shouldBe "Show Id does not exist"
-
     }
 })

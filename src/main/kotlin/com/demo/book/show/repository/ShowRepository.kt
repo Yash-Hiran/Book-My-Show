@@ -120,7 +120,7 @@ class ShowRepository(@Inject private val datasource: DataSource) {
         )
     }
 
-    fun getBookedSeatsOfAShow(showId: Int) = datasource.connection.use{ connection ->
+    fun getBookedSeatsOfAShow(showId: Int) = datasource.connection.use { connection ->
         GetBookedSeatsQuery().query(
             connection,
             GetBookedSeatsParams(showId)

@@ -5,5 +5,14 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
 
-    <includeAll path="./changelog" relativeToChangelogFile="true"/>
+    <include file="changelog/0.0.1-init-table.sql" relativeToChangelogFile="true"/>
+    <include file="changelog/0.0.2-insert-movies.sql" relativeToChangelogFile="true"/>
+    <include file="changelog/0.0.3-add-duration.sql" relativeToChangelogFile="true"/>
+    <include file="changelog/0.0.4-remove-start-and-end-from-movies.sql" relativeToChangelogFile="true"/>
+    <include file="changelog/0.0.5-create-user-table.sql" relativeToChangelogFile="true"/>
+    <include file="changelog/0.0.6-add-admin-user.sql" relativeToChangelogFile="true"/>
+    <include file="changelog/0.0.8-create-show-table.sql" relativeToChangelogFile="true"/>
+    <include file="changelog/0.0.9-insert-show.sql" relativeToChangelogFile="true"/>
+    <include file="changelog/0.1.0-create-ticket-table.sql" relativeToChangelogFile="true"/>
+    <include file="changelog/0.1.4-add-capacity-column-in-show-table.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>

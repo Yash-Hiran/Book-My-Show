@@ -70,6 +70,9 @@ abstract class BookingIntegrationSpec : IntegrationSpec() {
         LocalDateTime.parse(startTime)
     )
 
+    protected fun getAvailableShowsWithAuth(userCredentialsRequest: UserCredentialsRequest) =
+        httpClient.getWithBasicAuth<List<Int>>("/shows/1", userCredentialsRequest)
+
     protected fun createNewMovie(
         avengersMovie: CreateMovieRequest,
         userCredentialsRequest: UserCredentialsRequest
