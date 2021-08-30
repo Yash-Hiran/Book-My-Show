@@ -1,8 +1,8 @@
 package com.demo.book.api
 
-import com.demo.book.show.service.ShowService
-import com.demo.book.show.request.CreateShowRequest
 import com.demo.book.show.entity.Show
+import com.demo.book.show.request.CreateShowRequest
+import com.demo.book.show.service.ShowService
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.*
 import io.micronaut.security.annotation.Secured
@@ -26,6 +26,11 @@ class ShowApi(@Inject val showService: ShowService) {
     @Post("/shows")
     fun saveShow(@Body showRequest: CreateShowRequest): HttpResponse<Int> {
         return HttpResponse.ok(showService.save(showRequest).id)
+    }
+
+    @Get(uris = ["/shows/{showId}/seats"])
+    fun getAvailableSeatsOfAShow(showId: Int): HttpResponse<List<Int>>? {
+        return HttpResponse.ok(showService.getAvailableSeatsOfAShow(showId))
     }
 
     @Put(uris = ["/shows/{showId}/price/{price}"])

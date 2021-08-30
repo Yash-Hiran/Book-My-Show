@@ -5,6 +5,8 @@ import com.demo.book.show.entity.Show
 import norm.command
 import norm.query
 import show.*
+import ticket.*
+import ticket.GetBookedSeatsParams
 import java.sql.Date
 import java.sql.Timestamp
 import java.time.LocalDateTime
@@ -140,4 +142,18 @@ class ShowRepository(@Inject private val datasource: DataSource) {
                 it.price
             )
         }
+
+    fun getAvailableSeatsOfAShow(id: Int) = datasource.connection.use { connection ->
+        GetShowCapacityQuery().query(
+            connection,
+            GetShowCapacityParams(id)
+        )
+    }
+
+    fun getBookedSeatsOfAShow(showId: Int) = datasource.connection.use { connection ->
+        GetBookedSeatsQuery().query(
+            connection,
+            GetBookedSeatsParams(showId)
+        )
+    }
 }

@@ -33,6 +33,7 @@ public data class SaveShowResult(
   public val showDate: Date,
   public val startTime: Timestamp,
   public val endTime: Timestamp,
+  public val capacity: Int,
   public val price: Int
 )
 
@@ -43,6 +44,7 @@ public class SaveShowRowMapper : RowMapper<SaveShowResult> {
     showDate = rs.getObject("show_date") as java.sql.Date,
     startTime = rs.getObject("start_time") as java.sql.Timestamp,
     endTime = rs.getObject("end_time") as java.sql.Timestamp,
+    capacity = rs.getObject("capacity") as kotlin.Int,
     price = rs.getObject("price") as kotlin.Int)
 }
 

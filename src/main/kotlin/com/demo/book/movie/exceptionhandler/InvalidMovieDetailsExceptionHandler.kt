@@ -14,7 +14,7 @@ import javax.inject.Singleton
 @Requirements(
     Requires(classes = [InvalidMovieDetailsException::class, ExceptionHandler::class])
 )
-class InvalidMovieDurationExceptionHandler : ExceptionHandler<InvalidMovieDetailsException, HttpResponse<ApiError>> {
+class InvalidMovieDetailsExceptionHandler : ExceptionHandler<InvalidMovieDetailsException, HttpResponse<ApiError>> {
     override fun handle(request: HttpRequest<*>?, exception: InvalidMovieDetailsException): HttpResponse<ApiError> {
         return HttpResponse.badRequest(ApiError(exception.errorCode, exception.message))
     }

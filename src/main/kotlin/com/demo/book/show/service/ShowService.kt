@@ -21,7 +21,6 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
 
         if (validateShowStartTime(showRequest.startTime))
             throw InvalidShowDetailsException("Can not schedule a show for past show time")
-
         if (!validateShowDate(showRequest))
             throw InvalidShowDetailsException("Show date and start time date does not match")
 
@@ -56,11 +55,35 @@ class ShowService(@Inject val showRepository: ShowRepository, private val movieR
 
     fun allShowsByOrder() = showRepository.findAllByOrder()
 
+    fun getAvailableSeatsOfAShow(showId: Int): List<Int> {
+
+        val showCapacityResult = showRepository.getAvailableSeatsOfAShow(showId)
+        if (showCapacityResult.isEmpty())
+            throw InvalidShowDetailsException("Show Id does not exist")
+        val showCapacity = showCapacityResult.first().capacity
+        val bookedSeatsList = getBookedSeats(showId)
+        val allSeatsList = 1..showCapacity
+        val availableSeatsList = allSeatsList.filter { it !in bookedSeatsList }
+
+        if (availableSeatsList.isEmpty())
+            throw InvalidShowDetailsException("Show Capacity Full")
+        return availableSeatsList
+    }
+
     private fun validateShowDate(showRequest: CreateShowRequest) =
         showRequest.showDate == showRequest.startTime.toLocalDate()
 
     private fun validateShowStartTime(showStartTime: LocalDateTime) =
         showStartTime < LocalDateTime.now()
+
+    private fun getBookedSeats(showId: Int): List<Int> {
+        val bookedSeats = showRepository.getBookedSeatsOfAShow(showId)
+        val bookedSeatsList = mutableListOf<Int>()
+        for (seatNumber in bookedSeats) {
+            bookedSeatsList.add(seatNumber.seatno)
+        }
+        return bookedSeatsList.toList()
+    }
 
     fun updatePrice(showId: Int, price: Int) {
         val show = getShowById(showId)
