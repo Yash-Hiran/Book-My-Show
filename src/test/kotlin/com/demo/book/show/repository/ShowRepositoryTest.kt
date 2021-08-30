@@ -56,7 +56,8 @@ class ShowRepositoryTest(@Inject override var dataSource: DataSource) : BookingI
                 1,
                 LocalDate.of(2021, 9, 25),
                 LocalDateTime.of(2021, 9, 25, 15, 50, 0),
-                LocalDateTime.of(2021, 9, 25, 16, 0, 0)
+                LocalDateTime.of(2021, 9, 25, 16, 0, 0),
+                100
             )
         }
 
@@ -76,7 +77,8 @@ class ShowRepositoryTest(@Inject override var dataSource: DataSource) : BookingI
                 1,
                 LocalDate.of(2021, 9, 25),
                 LocalDateTime.of(2021, 9, 25, 15, 50, 0),
-                LocalDateTime.of(2021, 9, 25, 16, 0, 0)
+                LocalDateTime.of(2021, 9, 25, 16, 0, 0),
+                100
             )
         }
 
@@ -101,14 +103,16 @@ class ShowRepositoryTest(@Inject override var dataSource: DataSource) : BookingI
                     1,
                     LocalDate.of(2021, 9, 26),
                     LocalDateTime.of(2021, 9, 26, 15, 50, 0),
-                    LocalDateTime.of(2021, 9, 26, 16, 0, 0)
+                    LocalDateTime.of(2021, 9, 26, 16, 0, 0),
+                    100
                 ),
                 Show(
                     1,
                     1,
                     LocalDate.of(2021, 9, 25),
                     LocalDateTime.of(2021, 9, 25, 15, 50, 0),
-                    LocalDateTime.of(2021, 9, 25, 16, 0, 0)
+                    LocalDateTime.of(2021, 9, 25, 16, 0, 0),
+                    100
                 )
             )
         }

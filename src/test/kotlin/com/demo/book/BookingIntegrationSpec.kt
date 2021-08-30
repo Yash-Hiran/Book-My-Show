@@ -26,7 +26,6 @@ import javax.inject.Inject
 
 @MicronautTest
 abstract class BookingIntegrationSpec : IntegrationSpec() {
-
     @Inject
     @field:Client("/api")
     protected lateinit var httpClient: HttpClient
@@ -41,6 +40,15 @@ abstract class BookingIntegrationSpec : IntegrationSpec() {
     override fun beforeEach(testCase: TestCase) {
         super.beforeEach(testCase)
         clearData()
+    }
+
+    override fun clearData() = dataSource.connection.use { connection ->
+        run {
+            connection.executeCommand("TRUNCATE TABLE tickets RESTART IDENTITY CASCADE;")
+            connection.executeCommand("TRUNCATE TABLE shows RESTART IDENTITY CASCADE;")
+            connection.executeCommand("TRUNCATE TABLE movies RESTART IDENTITY CASCADE;")
+            connection.executeCommand("TRUNCATE TABLE users RESTART IDENTITY CASCADE;")
+        }
     }
 
     protected fun jsonString(movie: Any?): String = jsonMapper.writeValueAsString(movie)
@@ -64,10 +72,11 @@ abstract class BookingIntegrationSpec : IntegrationSpec() {
     protected fun getAllShowsWithAuth(userCredentialsRequest: UserCredentialsRequest) =
         httpClient.getWithBasicAuth<Map<String, List<Show>>>("/shows", userCredentialsRequest)
 
-    protected fun newShowRequest(startDate: String, startTime: String) = CreateShowRequest(
+    protected fun newShowRequest(startDate: String, startTime: String, capacity: Int = 100) = CreateShowRequest(
         1,
         LocalDate.parse(startDate),
-        LocalDateTime.parse(startTime)
+        LocalDateTime.parse(startTime),
+        capacity
     )
 
     protected fun getAvailableShowsWithAuth(userCredentialsRequest: UserCredentialsRequest) =

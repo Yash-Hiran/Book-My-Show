@@ -30,7 +30,7 @@ public data class GetAllShowsResult(
 
 public class GetAllShowsRowMapper : RowMapper<GetAllShowsResult> {
   public override fun map(rs: ResultSet): GetAllShowsResult = GetAllShowsResult(
-    id = rs.getObject("id") as kotlin.Int,
+  id = rs.getObject("id") as kotlin.Int,
     movieId = rs.getObject("movie_id") as kotlin.Int,
     showDate = rs.getObject("show_date") as java.sql.Date,
     startTime = rs.getObject("start_time") as java.sql.Timestamp,

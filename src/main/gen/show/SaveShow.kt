@@ -15,7 +15,8 @@ public data class SaveShowParams(
   public val movie_id: Int?,
   public val show_date: Date?,
   public val start_time: Timestamp?,
-  public val end_time: Timestamp?
+  public val end_time: Timestamp?,
+  public val capacity: Int?
 )
 
 public class SaveShowParamSetter : ParamSetter<SaveShowParams> {
@@ -24,6 +25,7 @@ public class SaveShowParamSetter : ParamSetter<SaveShowParams> {
     ps.setObject(2, params.show_date)
     ps.setObject(3, params.start_time)
     ps.setObject(4, params.end_time)
+    ps.setObject(5, params.capacity)
   }
 }
 
@@ -50,8 +52,8 @@ public class SaveShowRowMapper : RowMapper<SaveShowResult> {
 
 public class SaveShowQuery : Query<SaveShowParams, SaveShowResult> {
   public override val sql: String = """
-      |INSERT INTO shows(movie_id, show_date, start_time , end_time)
-      |VALUES (?, ?, ? , ?)
+      |INSERT INTO shows(movie_id, show_date, start_time , end_time, capacity)
+      |VALUES (?, ?, ? , ?, ?)
       |returning *;
       |""".trimMargin()
 

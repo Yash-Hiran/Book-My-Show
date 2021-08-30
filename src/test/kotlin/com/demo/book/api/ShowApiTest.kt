@@ -28,10 +28,10 @@ class ShowApiTest : BookingIntegrationSpec() {
 
             // When
             createUser(adminCredentials)
-
             createNewMovie(newMovieRequest(100), adminCredentials)
             createNewShowWithBasicAuth(newShowRequest("2021-09-25", "2021-09-25T15:50:00"), adminCredentials)
             val response = httpClient.getWithBasicAuth<Map<String, List<Show>>>("/shows", adminCredentials)
+
             // Then
             response.status shouldBe HttpStatus.OK
             val savedShows = response.body.get()
@@ -43,10 +43,10 @@ class ShowApiTest : BookingIntegrationSpec() {
              |    "showDate" : "2021-09-25",
              |    "startTime" : "2021-09-25 15:50:00",
              |    "endTime" : "2021-09-25 17:30:00",
+             |    "capacity" : 100,
              |    "price" : 0
              |  } ]
-             |}"""
-                .trimMargin().trimIndent()
+             |}""".trimMargin().trimIndent()
         }
 
         "should get an empty Map when there are no saved shows with correct credentials" {
@@ -127,7 +127,6 @@ class ShowApiTest : BookingIntegrationSpec() {
         }
 
         "should get a show by id with correct credentials" {
-
             // Given
             createUser(adminCredentials)
             createNewMovie(newMovieRequest(100), adminCredentials)
@@ -146,12 +145,12 @@ class ShowApiTest : BookingIntegrationSpec() {
              |  "showDate" : "2021-09-25",
              |  "startTime" : "2021-09-25 15:50:00",
              |  "endTime" : "2021-09-25 17:30:00",
+             |  "capacity" : 100,
              |  "price" : 0
-             |}"""
-                .trimMargin().trimIndent()
+             |}""".trimMargin().trimIndent()
         }
 
-        "should update the price of movie with correct credentials" {
+        "should update the price of show with correct credentials" {
             // Given
             createUser(adminCredentials)
             createNewMovie(newMovieRequest(100), adminCredentials)
@@ -187,7 +186,6 @@ class ShowApiTest : BookingIntegrationSpec() {
         }
 
         "should throw an exception when price is already defined" {
-
             // Given
             createUser(adminCredentials)
             createNewMovie(newMovieRequest(100), adminCredentials)

@@ -39,6 +39,7 @@ class ShowRepository(@Inject private val datasource: DataSource) {
             it.showDate.toLocalDate(),
             it.startTime.toLocalDateTime(),
             it.endTime.toLocalDateTime(),
+            it.capacity,
             it.price
         )
     }.first()
@@ -50,7 +51,8 @@ class ShowRepository(@Inject private val datasource: DataSource) {
                 showToSave.movieId,
                 Date.valueOf(showToSave.showDate),
                 Timestamp.valueOf(showToSave.startTime),
-                Timestamp.valueOf(endTime)
+                Timestamp.valueOf(endTime),
+                showToSave.capacity
             )
         )
     }.map {
@@ -60,6 +62,7 @@ class ShowRepository(@Inject private val datasource: DataSource) {
             it.showDate.toLocalDate(),
             it.startTime.toLocalDateTime(),
             it.endTime.toLocalDateTime(),
+            it.capacity,
             it.price
         )
     }.first()
@@ -76,6 +79,7 @@ class ShowRepository(@Inject private val datasource: DataSource) {
             it.showDate.toLocalDate(),
             it.startTime.toLocalDateTime(),
             it.endTime.toLocalDateTime(),
+            it.capacity,
             it.price
         )
     }
@@ -118,6 +122,7 @@ class ShowRepository(@Inject private val datasource: DataSource) {
                 it.showDate.toLocalDate(),
                 it.startTime.toLocalDateTime(),
                 it.endTime.toLocalDateTime(),
+                it.capacity,
                 it.price
             )
         }
@@ -139,6 +144,7 @@ class ShowRepository(@Inject private val datasource: DataSource) {
                 it.showDate.toLocalDate(),
                 it.startTime.toLocalDateTime(),
                 it.endTime.toLocalDateTime(),
+                it.capacity,
                 it.price
             )
         }

@@ -1,1 +1,1 @@
-UPDATE shows SET price=:price WHERE id=:id
+UPDATE shows SET price=:price WHERE id=:id;
